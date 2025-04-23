@@ -67,8 +67,11 @@
                             <p><a href="{{ paslauga.maps }}" target="_blank">📍 Google Maps</a></p>
                         {% endif %}
                         {% if paslauga.svetaine %}
-                            <p><a href="{{ paslauga.svetaine }}" target="_blank">🌐 Svetainė</a></p>
-                        {% endif %}
+    <p><a href="{{ paslauga.svetaine }}" target="_blank">🌐 Svetainė</a></p>
+{% endif %}
+
+<p><a href="{{ url_for('viena_paslauga', paslaugos_id=paslauga.id) }}">➡️ Plačiau</a></p>
+
                     </div>
                     {% endfor %}
                 </div>

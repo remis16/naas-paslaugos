@@ -1,34 +1,53 @@
 {
-    "restoranai": [
-        {
-            "pavadinimas": "Neighbourhood",
-            "aprasymas": "Modernus airiškas restoranas, siūlantis kūrybingus patiekalus iš vietinių produktų.",
-            "adresas": "Main Street 12, Naas",
-            "telefonas": "+353 85 111 1111",
-            "darbo_laikas": "12:00 - 22:00",
-            "maps": "https://www.google.com/maps?q=Neighbourhood,+Naas",
-            "id": 1
-        }
+    "maistas_ir_gerimai": [
+      {"subkategorija": "restoranai"},
+      {"subkategorija": "kavines"},
+      {"subkategorija": "greitas_maistas"},
+      {"subkategorija": "meniu_nuorodos"},
+      {"subkategorija": "maisto_parduotuves"},
+      {"subkategorija": "specializuotos_parduotuves"},
+      {"subkategorija": "turgeliai"}
     ],
-    "grozio_paslaugos": [
-        {
-            "pavadinimas": "The Hair Boutique",
-            "aprasymas": "Modernus kirpyklos salonas moterims ir vyrams.",
-            "adresas": "Abbey Street, Naas",
-            "telefonas": "+353 85 101 1010",
-            "darbo_laikas": "09:00 - 18:00",
-            "maps": "https://www.google.com/maps?q=The+Hair+Boutique,+Naas",
-            "id": 2
-        }
+    "grozio_ir_sveikatos_paslaugos": [
+      {"subkategorija": "kirpyklos"},
+      {"subkategorija": "nagu_salonai"},
+      {"subkategorija": "grozio_salonai"},
+      {"subkategorija": "vaistines"},
+      {"subkategorija": "gydytojai"},
+      {"subkategorija": "odontologai"},
+      {"subkategorija": "masazai"}
     ],
-    "vaistines": [
-        {
-            "pavadinimas": "Vista Primary Care Centre",
-            "aprasymas": "Vaistinė, teikianti platų vaistų ir sveikatos prekių pasirinkimą.",
-            "adresas": "Ballymore Eustace Road, Naas",
-            "telefonas": "+353 45 881146",
-            "maps": "https://www.google.com/maps?q=Vista+Primary+Care+Centre,+Naas",
-            "id": 3
-        }
+    "automobiliai_ir_transportas": [
+      {"subkategorija": "remontas"},
+      {"subkategorija": "degalines"},
+      {"subkategorija": "plovyklos"},
+      {"subkategorija": "taksi"},
+      {"subkategorija": "automobiliu_salonai"},
+      {"subkategorija": "automobiliu_nuoma"}
+    ],
+    "sportas_ir_laisvalaikis": [
+      {"subkategorija": "sporto_klubai"},
+      {"subkategorija": "baseinai"},
+      {"subkategorija": "parkai"},
+      {"subkategorija": "laisvalaikio_centrai"},
+      {"subkategorija": "zirgynai"}
+    ],
+    "viesasis_sektorius": [
+      {"subkategorija": "savivaldybe"},
+      {"subkategorija": "policija"},
+      {"subkategorija": "biblioteka"},
+      {"subkategorija": "mokyklos"},
+      {"subkategorija": "darzeliai"},
+      {"subkategorija": "ligonines"}
+    ],
+    "apgyvendinimas": [
+      {"subkategorija": "viesbuciai"},
+      {"subkategorija": "bnb"},
+      {"subkategorija": "sveciu_namai"},
+      {"subkategorija": "poilsio_kompleksai"}
+    ],
+    "darbo_pasiulymai": [
+      {"subkategorija": "ieskau_darbo"},
+      {"subkategorija": "siulau_darba"}
     ]
-}
+  }

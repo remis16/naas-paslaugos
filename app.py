@@ -1,15 +1,20 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_file
 from datetime import datetime
 import json
 import os
 from werkzeug.utils import secure_filename
 from flask_basicauth import BasicAuth
+from dotenv import load_dotenv
+import pandas as pd
+from io import BytesIO
+
+load_dotenv()
 
 app = Flask(__name__)
 
-# Prisijungimo duomenys
-app.config['BASIC_AUTH_USERNAME'] = 'admin'
-app.config['BASIC_AUTH_PASSWORD'] = 'slaptazodis123'
+app.config['BASIC_AUTH_USERNAME'] = os.getenv('BASIC_AUTH_USERNAME')
+app.config['BASIC_AUTH_PASSWORD'] = os.getenv('BASIC_AUTH_PASSWORD')
+
 basic_auth = BasicAuth(app)
 
 @app.route('/')
@@ -23,6 +28,18 @@ def paslaugos(kategorija):
         duomenys = json.load(f)
     paslaugos = duomenys.get(kategorija, [])
     return render_template('paslaugos.html', kategorija=kategorija, paslaugos=paslaugos, year=datetime.now().year)
+
+@app.route('/paslaugos')
+def visos_paslaugos():
+    failo_kelias = os.path.join(os.path.dirname(__file__), 'services.json')
+    with open(failo_kelias, 'r', encoding='utf-8') as f:
+        duomenys = json.load(f)
+
+    paslaugos = []
+    for kategorija in duomenys.values():
+        paslaugos.extend(kategorija)
+
+    return render_template('paslaugos.html', kategorija='visos paslaugos', paslaugos=paslaugos, year=datetime.now().year)
 
 @app.route('/kontaktai', methods=['GET', 'POST'])
 def kontaktai():
@@ -58,7 +75,6 @@ def admin():
         maps = request.form['maps']
         svetaine = request.form.get('svetaine')
 
-        # 📸 Nuotraukos įkėlimas
         failas = request.files.get('nuotrauka')
         nuotraukos_kelias = None
 
@@ -90,7 +106,6 @@ def admin():
 
         zinute = "Paslauga sėkmingai pridėta!"
 
-    # 🔠 Rūšiavimas pagal pavadinimą
     for kategorija in duomenys:
         duomenys[kategorija] = sorted(duomenys[kategorija], key=lambda x: x.get('pavadinimas', '').lower())
 
@@ -137,9 +152,6 @@ def istrinti(kategorija, index):
             json.dump(duomenys, f, indent=4, ensure_ascii=False)
 
     return redirect(url_for('admin'))
-from flask import send_file
-import pandas as pd
-from io import BytesIO
 
 @app.route('/admin/eksportuoti')
 @basic_auth.required
@@ -160,30 +172,20 @@ def eksportuoti():
     output.seek(0)
 
     return send_file(output, download_name="paslaugos.xlsx", as_attachment=True)
-@app.route('/paslaugos')
-def visos_paslaugos():
-    failo_kelias = os.path.join(os.path.dirname(__file__), 'services.json')
-    with open(failo_kelias, 'r', encoding='utf-8') as f:
-        duomenys = json.load(f)
 
-    paslaugos = []
-    for kategorija in duomenys.values():
-        paslaugos.extend(kategorija)
-
-    return render_template('paslaugos.html', kategorija='visos paslaugos', paslaugos=paslaugos, year=datetime.now().year)
 @app.route('/lankytinos_vietos')
 def lankytinos_vietos():
     failo_kelias = os.path.join(os.path.dirname(__file__), 'lankytinos_vietos.json')
     with open(failo_kelias, 'r', encoding='utf-8') as f:
         vietos = json.load(f)
     return render_template('lankytinos_vietos.html', vietos=vietos, year=datetime.now().year)
+
 @app.route('/paslauga/<int:paslaugos_id>')
 def viena_paslauga(paslaugos_id):
     failo_kelias = os.path.join(os.path.dirname(__file__), 'services.json')
     with open(failo_kelias, 'r', encoding='utf-8') as f:
         duomenys = json.load(f)
 
-    # Ieškom paslaugos pagal ID
     for kategorija, sarasas in duomenys.items():
         for paslauga in sarasas:
             if paslauga.get('id') == paslaugos_id:
@@ -191,7 +193,6 @@ def viena_paslauga(paslaugos_id):
 
     return "Paslauga nerasta", 404
 
-
 if __name__ == '__main__':
-    print("Flask aplikacija startuoja...")  # Patikrinimui terminale
+    print("Flask aplikacija startuoja...")
     app.run(debug=True)
