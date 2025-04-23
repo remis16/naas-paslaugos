@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <title>Paslaugos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Viršutinis meniu -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">🇮🇪 Naas City Services</div>
+            <ul class="nav-links">
+                <li><a href="/">Pradžia</a></li>
+                <li><a href="/paslaugos">Paslaugos</a></li>
+                <li><a href="/apie">Apie miestą</a></li>
+                <li><a href="/kontaktai">Kontaktai</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero viršelis -->
+    <div class="hero">
+        <div class="hero-text">
+            <h1>Naas paslaugų gidas</h1>
+            <p>Pasirink kategoriją kairėje, kad pamatytum vietines paslaugas Naas mieste.</p>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="sidebar">
+            <h3>Paslaugų kategorijos</h3>
+            <ul>
+                <li><a href="{{ url_for('paslaugos', kategorija='restoranai') }}">Restoranai</a></li>
+                <li><a href="{{ url_for('paslaugos', kategorija='grozio_paslaugos') }}">Grožio paslaugos</a></li>
+                <li><a href="{{ url_for('paslaugos', kategorija='automobiliai') }}">Automobiliai</a></li>
+                <li><a href="{{ url_for('paslaugos', kategorija='kavines') }}">Kavinės</a></li>
+                <li><a href="{{ url_for('paslaugos', kategorija='vaistines') }}">Vaistinės</a></li>
+                <li><a href="{{ url_for('paslaugos', kategorija='sporto_klubai') }}">Sporto klubai</a></li>
+            </ul>
+        </div>
+
+        <div class="content">
+            {% if paslaugos %}
+                <h2>{{ kategorija.replace('_', ' ').title() }}</h2>
+                <div class="paslaugos-konteineris">
+                    {% for paslauga in paslaugos %}
+                    <div class="paslauga-kortele">
+                        {% if paslauga.nuotrauka %}
+                            <img src="{{ url_for('static', filename=paslauga.nuotrauka) }}" class="paslaugos-nuotrauka" alt="Nuotrauka">
+                        {% endif %}
+                        <h3>{{ paslauga.pavadinimas }}</h3>
+                        <p>{{ paslauga.aprasymas }}</p>
+                        <p><strong>Adresas:</strong> {{ paslauga.adresas }}</p>
+                        <p><strong>Telefonas:</strong> {{ paslauga.telefonas }}</p>
+                        {% if paslauga.darbo_laikas %}
+                            <p><strong>Darbo laikas:</strong> {{ paslauga.darbo_laikas }}</p>
+                        {% endif %}
+                        {% if paslauga.maps %}
+                            <p><a href="{{ paslauga.maps }}" target="_blank">📍 Google Maps</a></p>
+                        {% endif %}
+                        {% if paslauga.svetaine %}
+                            <p><a href="{{ paslauga.svetaine }}" target="_blank">🌐 Svetainė</a></p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <h2>Naas paslaugų gidas</h2>
+                <p>Pasirink kategoriją kairėje, kad pamatytum vietines paslaugas Naas mieste.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>&copy; {{ year }} Naas City Services. All rights reserved.</p>
+            <p><a href="{{ url_for('kontaktai') }}">Kontaktai</a> | <a href="{{ url_for('teisiskai') }}">Teisinė informacija</a></p>
+        </div>
+    </footer>
+</body>
+</html>

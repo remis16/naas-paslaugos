@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <title>Administravimas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script>
+        function filtruotiPaslaugas() {
+            const ivestis = document.getElementById("paieska").value.toLowerCase();
+            const paslaugos = document.querySelectorAll(".paslauga-item");
+
+            paslaugos.forEach(p => {
+                const tekstas = p.innerText.toLowerCase();
+                p.style.display = tekstas.includes(ivestis) ? "block" : "none";
+            });
+        }
+
+        function rikiuotiPaslaugas() {
+            const pasirinkimas = document.getElementById("rusiavimas").value;
+            const sarasai = document.querySelectorAll("section ul");
+
+            sarasai.forEach(sarasas => {
+                const elementai = Array.from(sarasas.querySelectorAll("li.paslauga-item"));
+
+                elementai.sort((a, b) => {
+                    const getText = (el, laukas) => {
+                        const tekstas = el.querySelector("strong")?.innerText || "";
+                        const fullText = el.innerText.toLowerCase();
+                        if (laukas === "pavadinimas") return tekstas.toLowerCase();
+                        if (laukas === "adresas") return (fullText.match(/adresas: (.+)/) || [])[1] || "";
+                        if (laukas === "telefonas") return (fullText.match(/telefonas: (.+)/) || [])[1] || "";
+                        return "";
+                    };
+                    return getText(a, pasirinkimas).localeCompare(getText(b, pasirinkimas));
+                });
+
+                elementai.forEach(el => sarasas.appendChild(el));
+            });
+        }
+
+        function filtruotiKategorija() {
+            const pasirinkta = document.getElementById("filtruotiKategorija").value;
+            const sekcijos = document.querySelectorAll("main > section");
+
+            sekcijos.forEach(section => {
+                const antraste = section.querySelector("h3").innerText.toLowerCase();
+                if (pasirinkta === "visi" || antraste.includes(pasirinkta.replace('_', ' ').toLowerCase())) {
+                    section.style.display = "block";
+                } else {
+                    section.style.display = "none";
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<main class="content">
+    <h1>🛠️ Administravimo skydelis</h1>
+
+    {% if zinute %}
+        <div class="alert">{{ zinute }}</div>
+    {% endif %}
+
+    <!-- Pridėjimo forma -->
+    <form method="POST" enctype="multipart/form-data" class="form">
+        <label>Kategorija (pvz. restoranai):</label>
+        <input type="text" name="kategorija" required>
+
+        <label>Pavadinimas:</label>
+        <input type="text" name="pavadinimas" required>
+
+        <label>Aprašymas:</label>
+        <textarea name="aprasymas" required></textarea>
+
+        <label>Adresas:</label>
+        <input type="text" name="adresas" required>
+
+        <label>Telefonas:</label>
+        <input type="text" name="telefonas" required>
+
+        <label>Darbo laikas:</label>
+        <input type="text" name="darbo_laikas" required>
+
+        <label>Google Maps nuoroda:</label>
+        <input type="text" name="maps" required>
+
+        <label>Svetainė (neprivaloma):</label>
+        <input type="text" name="svetaine">
+
+        <label>Nuotrauka (neprivaloma):</label>
+        <input type="file" name="nuotrauka">
+
+        <button type="submit">➕ Pridėti paslaugą</button>
+    </form>
+
+    <hr>
+
+    <h2>📋 Esamos paslaugos:</h2>
+
+    <!-- Paieška -->
+    <label for="paieska">🔍 Ieškoti paslaugų:</label>
+    <input type="text" id="paieska" class="form-input" onkeyup="filtruotiPaslaugas()" placeholder="Ieškok pagal pavadinimą, adresą ir t.t." style="width: 100%; padding: 10px; margin-bottom: 20px;">
+
+    <!-- Rūšiavimas -->
+    <label for="rusiavimas">🔃 Rūšiuoti pagal:</label>
+    <select id="rusiavimas" class="form-input" onchange="rikiuotiPaslaugas()" style="margin-bottom: 20px;">
+        <option value="default">– Pasirink –</option>
+        <option value="pavadinimas">Pavadinimą (A–Z)</option>
+        <option value="adresas">Adresą (A–Z)</option>
+        <option value="telefonas">Telefoną (A–Z)</option>
+    </select>
+
+    <!-- Filtravimas pagal kategoriją -->
+    <label for="filtruotiKategorija">📂 Filtruoti pagal kategoriją:</label>
+    <select id="filtruotiKategorija" class="form-input" onchange="filtruotiKategorija()" style="margin-bottom: 20px;">
+        <option value="visi">– Rodyti visas –</option>
+        {% for kategorija in duomenys %}
+            <option value="{{ kategorija }}">{{ kategorija.replace('_', ' ').title() }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Eksportas -->
+    <a href="{{ url_for('eksportuoti') }}" class="form-button" style="margin-bottom: 30px; display: inline-block;">📄 Eksportuoti į Excel</a>
+
+    <!-- Statistika -->
+    <div class="alert" style="background-color:#e8f4ff; border:1px solid #b5d9f6; color:#155ca0;">
+        <strong>📊 Statistika:</strong>
+        <ul>
+            {% for kategorija, sarasas in duomenys.items() %}
+                <li>{{ kategorija.replace('_', ' ').title() }}: {{ sarasas|length }} paslaugų</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Paslaugų sąrašas -->
+    {% for kategorija, sarasas in duomenys.items() %}
+        <section>
+            <h3>{{ kategorija.replace('_', ' ').title() }}</h3>
+            <ul>
+                {% for paslauga in sarasas %}
+                    <li class="paslauga-item">
+                        <strong>{{ paslauga.pavadinimas }}</strong>
+                        <a href="{{ url_for('redaguoti', kategorija=kategorija, index=loop.index0) }}">✏ Redaguoti</a>
+                        <form action="{{ url_for('istrinti', kategorija=kategorija, index=loop.index0) }}" method="POST" style="display:inline;">
+                            <button type="submit" onclick="return confirm('Ar tikrai norite ištrinti?')">❌ Ištrinti</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% endfor %}
+
+    <br><a href="/">⬅️ Grįžti į pradžią</a>
+</main>
+
+<footer class="footer">
+    <div class="footer-inner">
+        <p>&copy; {{ year }} Naas Miesto Paslaugos. Visos teisės saugomos.</p>
+    </div>
+</footer>
+</body>
+</html>
