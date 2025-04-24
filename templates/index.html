@@ -31,14 +31,21 @@
         <div class="sidebar">
             <h3>Paslaugų kategorijos</h3>
             <ul>
-                <li><a href="{{ url_for('paslaugos', kategorija='restoranai') }}">Restoranai</a></li>
-                <li><a href="{{ url_for('paslaugos', kategorija='grozio_paslaugos') }}">Grožio paslaugos</a></li>
-                <li><a href="{{ url_for('paslaugos', kategorija='automobiliai') }}">Automobiliai</a></li>
-                <li><a href="{{ url_for('paslaugos', kategorija='kavines') }}">Kavinės</a></li>
-                <li><a href="{{ url_for('paslaugos', kategorija='vaistines') }}">Vaistinės</a></li>
-                <li><a href="{{ url_for('paslaugos', kategorija='sporto_klubai') }}">Sporto klubai</a></li>
+                {% for pagr_kategorija, subkategorijos in kategorijos.items() %}
+                    <li><strong>{{ pagr_kategorija.replace("_", " ") | title }}</strong></li>
+                    <ul>
+                        {% for sub in subkategorijos %}
+                            <li>
+                                <a href="{{ url_for('paslaugos', kategorija=sub.subkategorija) }}">
+                                    {{ sub.subkategorija.replace("_", " ") | title }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
             </ul>
         </div>
+        
 
         <div class="content">
             {% if paslaugos %}

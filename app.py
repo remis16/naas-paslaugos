@@ -18,8 +18,12 @@ app.config['BASIC_AUTH_PASSWORD'] = os.getenv('BASIC_AUTH_PASSWORD')
 basic_auth = BasicAuth(app)
 
 @app.route('/')
+@basic_auth.required
 def index():
-    return render_template('index.html', year=datetime.now().year)
+    failo_kelias = os.path.join(os.path.dirname(__file__), 'services.json')
+    with open(failo_kelias, 'r', encoding='utf-8') as f:
+        duomenys = json.load(f)
+    return render_template('index.html', year=datetime.now().year, kategorijos=duomenys)
 
 @app.route('/paslaugos/<kategorija>')
 def paslaugos(kategorija):
@@ -27,7 +31,7 @@ def paslaugos(kategorija):
     with open(failo_kelias, 'r', encoding='utf-8') as f:
         duomenys = json.load(f)
     paslaugos = duomenys.get(kategorija, [])
-    return render_template('paslaugos.html', kategorija=kategorija, paslaugos=paslaugos, year=datetime.now().year)
+    return render_template('paslaugos.html', kategorija=kategorija, paslaugos=paslaugos, kategorijos=duomenys, year=datetime.now().year)
 
 @app.route('/paslaugos')
 def visos_paslaugos():
@@ -36,10 +40,10 @@ def visos_paslaugos():
         duomenys = json.load(f)
 
     paslaugos = []
-    for kategorija in duomenys.values():
-        paslaugos.extend(kategorija)
+    for sarasas in duomenys.values():
+        paslaugos.extend(sarasas)
 
-    return render_template('paslaugos.html', kategorija='visos paslaugos', paslaugos=paslaugos, year=datetime.now().year)
+    return render_template('paslaugos.html', kategorija='visos paslaugos', paslaugos=paslaugos, kategorijos=duomenys, year=datetime.now().year)
 
 @app.route('/kontaktai', methods=['GET', 'POST'])
 def kontaktai():
