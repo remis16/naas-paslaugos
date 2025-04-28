@@ -1,94 +1,89 @@
-<!-- paslaugos.html -->
 <!DOCTYPE html>
-<html lang="lt">
+<html lang="{{ lang }}">
 <head>
     <meta charset="UTF-8">
-    <title>Paslaugos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{ translations['description'] }}">
+    <title>{{ translations['title'] }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <!-- Viršutinis meniu -->
-    <header>
-        <nav class="navbar">
-            <div class="logo">🇮🇪 Naas City Services</div>
-            <ul class="nav-links">
-                <li><a href="/">Pradžia</a></li>
-                <li><a href="/paslaugos">Paslaugos</a></li>
-                <li><a href="/apie">Apie miestą</a></li>
-                <li><a href="/kontaktai">Kontaktai</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <!-- Hero viršelis -->
-    <div class="hero">
-        <div class="hero-text">
-            <h1>Naas paslaugų gidas</h1>
-        </div>
+<body>
+
+<header>
+    <nav class="navbar">
+        <div class="logo">🇮🇪 Naas City Services</div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('index') }}">{{ translations['home'] }}</a></li>
+            <li><a href="{{ url_for('kontaktai') }}">{{ translations['contact'] }}</a></li>
+            <li><a href="{{ url_for('teisiskai') }}">{{ translations['legal'] }}</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="hero">
+    <div class="language-switcher">
+        {% for lang_code in ['lt', 'en', 'fr', 'de', 'it', 'es', 'pt', 'ru', 'ua', 'ro'] %}
+            <a href="{{ url_for('set_language', lang_code=lang_code) }}">{{ lang_code.upper() }}</a>{% if not loop.last %} | {% endif %}
+        {% endfor %}
     </div>
 
-    <div class="main-container">
-        <div class="sidebar">
-            <h3>Paslaugų kategorijos</h3>
-            <ul>
-                {% for pagr_kategorija, subkategorijos in kategorijos.items() %}
-                    <li><strong>{{ pagr_kategorija.replace("_", " ") | title }}</strong></li>
-                    <ul>
-                        {% for sub in subkategorijos %}
-                            <li>
-                                <a href="{{ url_for('paslaugos', kategorija=sub.subkategorija) }}">
-                                    {{ sub.subkategorija.replace("_", " ") | title }}
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% endfor %}
-                <li><a href="{{ url_for('lankytinos_vietos') }}">Lankytinos vietos</a></li>
-            </ul>
-        </div>
+    <div class="hero-text">
+        <h1>{{ kategorija.replace('_', ' ') | title }}</h1>
+        <p>{{ translations['browse_services'] }}</p>
+    </div>
+</div>
 
-        <div class="content">
-            {% if paslaugos %}
-                <h2>{{ kategorija.replace('_', ' ').title() }}</h2>
-                <div class="paslaugos-konteineris">
-                    {% for paslauga in paslaugos %}
+<div class="main-container">
+    <section class="content">
+        {% if paslaugos %}
+            <div class="paslaugos-konteineris">
+                {% for paslauga in paslaugos %}
                     <div class="paslauga-kortele">
                         {% if paslauga.nuotrauka %}
-                            <img src="{{ url_for('static', filename=paslauga.nuotrauka) }}" class="paslaugos-nuotrauka" alt="Nuotrauka">
+                            <img src="{{ url_for('static', filename=paslauga.nuotrauka) }}" class="paslaugos-nuotrauka" alt="Paslaugos nuotrauka">
                         {% endif %}
-                        <h3>
-                            <a href="{{ url_for('viena_paslauga', paslaugos_id=paslauga.id) }}">
-                                {{ paslauga.pavadinimas }}
-                            </a>
-                        </h3>
+                        <h3>{{ paslauga.pavadinimas }}</h3>
                         <p>{{ paslauga.aprasymas }}</p>
-                        <p><strong>Adresas:</strong> {{ paslauga.adresas }}</p>
-                        <p><strong>Telefonas:</strong> {{ paslauga.telefonas }}</p>
+                        <p><strong>{{ translations['address'] }}:</strong> {{ paslauga.adresas }}</p>
+                        <p><strong>{{ translations['phone'] }}:</strong> {{ paslauga.telefonas }}</p>
                         {% if paslauga.darbo_laikas %}
-                            <p><strong>Darbo laikas:</strong> {{ paslauga.darbo_laikas }}</p>
+                            <p><strong>{{ translations['hours'] }}:</strong> {{ paslauga.darbo_laikas }}</p>
                         {% endif %}
                         {% if paslauga.maps %}
-                            <p><a href="{{ paslauga.maps }}" target="_blank">📍 Google Maps</a></p>
+                            <p><a href="{{ paslauga.maps }}" target="_blank">📍 {{ translations['view_on_map'] }}</a></p>
                         {% endif %}
                         {% if paslauga.svetaine %}
-                            <p><a href="{{ paslauga.svetaine }}" target="_blank">🌐 Svetainė</a></p>
+                            <p><a href="{{ paslauga.svetaine }}" target="_blank">🌐 {{ translations['visit_website'] }}</a></p>
                         {% endif %}
-                        <p><a href="{{ url_for('viena_paslauga', paslaugos_id=paslauga.id) }}">➡️ Plačiau</a></p>
                     </div>
-                    {% endfor %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-services-box">
+                <h2>{{ translations['no_services_title'] }}</h2>
+                <p>{{ translations['no_services_text'] }}</p>
+                <a href="{{ url_for('index') }}" class="hero-button">{{ translations['back_to_home'] }}</a>
+                <div class="language-switcher" style="text-align: center; margin-top: 20px; font-size: 1rem;">
+                    <a href="{{ url_for('set_language', lang_code='lt') }}">Lithuania</a> |
+                    <a href="{{ url_for('set_language', lang_code='en') }}">United Kingdom</a> |
+                    <a href="{{ url_for('set_language', lang_code='de') }}">Germany</a> |
+                    <a href="{{ url_for('set_language', lang_code='fr') }}">France</a> |
+                    <a href="{{ url_for('set_language', lang_code='it') }}">Italy</a> |
+                    <a href="{{ url_for('set_language', lang_code='pt') }}">Portugal</a> |
+                    <a href="{{ url_for('set_language', lang_code='ro') }}">Romania</a> |
+                    <a href="{{ url_for('set_language', lang_code='pl') }}">Poland</a>
                 </div>
-            {% else %}
-                <h2>Paslaugų peržiūra</h2>
-                <p>Pasirink kategoriją kairėje, kad pamatytum vietines paslaugas Naas mieste.</p>
-            {% endif %}
-        </div>
-    </div>
+                
+        {% endif %}
+    </section>
+</div>
 
-    <footer class="footer">
-        <div class="footer-inner">
-            <p>&copy; {{ year }} Naas City Services. All rights reserved.</p>
-            <p><a href="{{ url_for('kontaktai') }}">Kontaktai</a> | <a href="{{ url_for('teisiskai') }}">Teisinė informacija</a></p>
-        </div>
-    </footer>
+<footer class="footer">
+    <div class="footer-inner">
+        <p>&copy; {{ year }} Naas City Services. {{ translations['rights_reserved'] }}</p>
+    </div>
+</footer>
+
 </body>
 </html>

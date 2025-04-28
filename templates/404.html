@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Puslapis nerastas - Naas City Services gidas. Atraskite mūsų paslaugas ir grįžkite į pagrindinį puslapį.">
+    <meta name="keywords" content="404, nerasta, Naas, Naas City, paslaugos, grįžti, Airija">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Naas City Services">
+    <title>404 - Puslapis nerastas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="content">
+    <h1>😕 404 - Puslapis nerastas</h1>
+    <p>Atsiprašome, bet puslapis, kurio ieškote, neegzistuoja.</p>
+    <p><a href="{{ url_for('index') }}">⬅️ Grįžti į pagrindinį puslapį</a></p>
+
+    <div class="language-switcher" style="text-align: center; margin-top: 20px; font-size: 1rem;">
+        <a href="{{ url_for('set_language', lang_code='lt') }}">Lithuania</a> |
+        <a href="{{ url_for('set_language', lang_code='en') }}">United Kingdom</a> |
+        <a href="{{ url_for('set_language', lang_code='de') }}">Germany</a> |
+        <a href="{{ url_for('set_language', lang_code='fr') }}">France</a> |
+        <a href="{{ url_for('set_language', lang_code='it') }}">Italy</a> |
+        <a href="{{ url_for('set_language', lang_code='pt') }}">Portugal</a> |
+        <a href="{{ url_for('set_language', lang_code='ro') }}">Romania</a> |
+        <a href="{{ url_for('set_language', lang_code='pl') }}">Poland</a>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="footer-inner">
+        <p>&copy; {{ year }} Naas Miesto Paslaugos. {{ translations.get('rights_reserved', 'Visos teisės saugomos.') }}</p>
+    </div>
+</footer>
+
+</body>
+</html>

@@ -1,46 +1,80 @@
 <!DOCTYPE html>
-<html lang="lt">
+<html lang="{{ lang }}">
 <head>
     <meta charset="UTF-8">
-    <title>Redaguoti paslaugą</title>
+    <title>{{ translations.get('edit_service', 'Redaguoti paslaugą') }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="content">
-        <h1>Redaguoti paslaugą ({{ kategorija.replace('_', ' ').title() }})</h1>
+<div class="content">
+    <h1>✏️ {{ translations.get('edit_service', 'Redaguoti paslaugą') }} ({{ kategorija.replace('_', ' ').title() }} → {{ subkategorija.replace('_', ' ').title() }})</h1>
 
-        <form method="POST">
-            <label>Pavadinimas:</label><br>
-            <input type="text" name="pavadinimas" value="{{ paslauga.pavadinimas }}" required><br><br>
+    <form method="POST" autocomplete="off" class="form">
+        <!-- Paslėpti identifikatoriai -->
+        <input type="hidden" name="kategorija" value="{{ kategorija }}">
+        <input type="hidden" name="subkategorija" value="{{ subkategorija }}">
+        <input type="hidden" name="index" value="{{ index }}">
 
-            <label>Aprašymas:</label><br>
-            <textarea name="aprasymas" required>{{ paslauga.aprasymas }}</textarea><br><br>
-
-            <label>Adresas:</label><br>
-            <input type="text" name="adresas" value="{{ paslauga.adresas }}" required><br><br>
-
-            <label>Telefonas:</label><br>
-            <input type="text" name="telefonas" value="{{ paslauga.telefonas }}" required><br><br>
-
-            <label>Darbo laikas:</label><br>
-            <input type="text" name="darbo_laikas" value="{{ paslauga.darbo_laikas }}" required><br><br>
-
-            <label>Google Maps nuoroda:</label><br>
-            <input type="text" name="maps" value="{{ paslauga.maps }}" required><br><br>
-
-            <label>Svetainė (neprivaloma):</label><br>
-            <input type="text" name="svetaine" value="{{ paslauga.svetaine }}"><br><br>
-
-            <button type="submit">💾 Išsaugoti pakeitimus</button>
-        </form>
-
-        <br><a href="/admin">⟵ Grįžti į administravimo skydelį</a>
-    </div>
-
-    <footer class="footer">
-        <div class="footer-inner">
-            <p>&copy; {{ year }} Naas Miesto Paslaugos. Visos teisės saugomos.</p>
+        <div class="form-group">
+            <label for="pavadinimas">Pavadinimas:</label>
+            <input type="text" id="pavadinimas" name="pavadinimas" value="{{ paslauga.pavadinimas }}" required minlength="2" maxlength="100">
         </div>
-    </footer>
+
+        <div class="form-group">
+            <label for="aprasymas">Aprašymas:</label>
+            <textarea id="aprasymas" name="aprasymas" required minlength="10" maxlength="1000">{{ paslauga.aprasymas }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="adresas">Adresas:</label>
+            <input type="text" id="adresas" name="adresas" value="{{ paslauga.adresas }}" required minlength="5" maxlength="150">
+        </div>
+
+        <div class="form-group">
+            <label for="telefonas">Telefonas:</label>
+            <input type="tel" id="telefonas" name="telefonas" value="{{ paslauga.telefonas }}" pattern="\+?\d{7,15}" required title="Įveskite teisingą telefono numerį, pvz., +37061234567">
+        </div>
+
+        <div class="form-group">
+            <label for="darbo_laikas">Darbo laikas:</label>
+            <input type="text" id="darbo_laikas" name="darbo_laikas" value="{{ paslauga.darbo_laikas }}" required minlength="2" maxlength="100">
+        </div>
+
+        <div class="form-group">
+            <label for="maps">Google Maps nuoroda:</label>
+            <input type="url" id="maps" name="maps" value="{{ paslauga.maps }}" required pattern="https?://.+" title="Įveskite tinkamą nuorodą prasidedančią https://">
+        </div>
+
+        <div class="form-group">
+            <label for="svetaine">Svetainė (neprivaloma):</label>
+            <input type="url" id="svetaine" name="svetaine" value="{{ paslauga.svetaine }}" pattern="https?://.+" title="Įveskite tinkamą svetainės adresą">
+        </div>
+
+        <div class="form-group">
+            <label for="nuotrauka">Nuotraukos kelias (jei yra):</label>
+            <input type="text" id="nuotrauka" name="nuotrauka" value="{{ paslauga.nuotrauka }}" minlength="0" maxlength="255">
+            <div class="language-switcher" style="text-align: center; margin-top: 20px; font-size: 1rem;">
+                <a href="{{ url_for('set_language', lang_code='lt') }}">Lithuania</a> |
+                <a href="{{ url_for('set_language', lang_code='en') }}">United Kingdom</a> |
+                <a href="{{ url_for('set_language', lang_code='de') }}">Germany</a> |
+                <a href="{{ url_for('set_language', lang_code='fr') }}">France</a> |
+                <a href="{{ url_for('set_language', lang_code='it') }}">Italy</a> |
+                <a href="{{ url_for('set_language', lang_code='pt') }}">Portugal</a> |
+                <a href="{{ url_for('set_language', lang_code='ro') }}">Romania</a> |
+                <a href="{{ url_for('set_language', lang_code='pl') }}">Poland</a>
+            </div>
+            
+
+        <button type="submit" class="btn-save">💾 Išsaugoti pakeitimus</button>
+    </form>
+
+    <br><a href="{{ url_for('admin') }}">⬅️ Grįžti į administravimo skydelį</a>
+</div>
+
+<footer class="footer">
+    <div class="footer-inner">
+        <p>&copy; {{ year }} Naas Miesto Paslaugos. {{ translations.get('rights_reserved', 'Visos teisės saugomos.') }}</p>
+    </div>
+</footer>
 </body>
 </html>

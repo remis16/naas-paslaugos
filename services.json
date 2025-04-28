@@ -1,53 +1,101 @@
 {
-    "maistas_ir_gerimai": [
-      {"subkategorija": "restoranai"},
-      {"subkategorija": "kavines"},
-      {"subkategorija": "greitas_maistas"},
-      {"subkategorija": "meniu_nuorodos"},
-      {"subkategorija": "maisto_parduotuves"},
-      {"subkategorija": "specializuotos_parduotuves"},
-      {"subkategorija": "turgeliai"}
-    ],
-    "grozio_ir_sveikatos_paslaugos": [
-      {"subkategorija": "kirpyklos"},
-      {"subkategorija": "nagu_salonai"},
-      {"subkategorija": "grozio_salonai"},
-      {"subkategorija": "vaistines"},
-      {"subkategorija": "gydytojai"},
-      {"subkategorija": "odontologai"},
-      {"subkategorija": "masazai"}
-    ],
-    "automobiliai_ir_transportas": [
-      {"subkategorija": "remontas"},
-      {"subkategorija": "degalines"},
-      {"subkategorija": "plovyklos"},
-      {"subkategorija": "taksi"},
-      {"subkategorija": "automobiliu_salonai"},
-      {"subkategorija": "automobiliu_nuoma"}
-    ],
-    "sportas_ir_laisvalaikis": [
-      {"subkategorija": "sporto_klubai"},
-      {"subkategorija": "baseinai"},
-      {"subkategorija": "parkai"},
-      {"subkategorija": "laisvalaikio_centrai"},
-      {"subkategorija": "zirgynai"}
-    ],
-    "viesasis_sektorius": [
-      {"subkategorija": "savivaldybe"},
-      {"subkategorija": "policija"},
-      {"subkategorija": "biblioteka"},
-      {"subkategorija": "mokyklos"},
-      {"subkategorija": "darzeliai"},
-      {"subkategorija": "ligonines"}
-    ],
-    "apgyvendinimas": [
-      {"subkategorija": "viesbuciai"},
-      {"subkategorija": "bnb"},
-      {"subkategorija": "sveciu_namai"},
-      {"subkategorija": "poilsio_kompleksai"}
-    ],
-    "darbo_pasiulymai": [
-      {"subkategorija": "ieskau_darbo"},
-      {"subkategorija": "siulau_darba"}
-    ]
-  }
+    "maistas_ir_gerimai": {
+        "restoranai": [
+            {
+                "id": "restoranai-1",
+                "pavadinimas": "The Moat Restaurant",
+                "aprasymas": "Modernus europietiškas maistas su vaizdu į kanalą.",
+                "adresas": "Abbey St, Naas",
+                "telefonas": "045 123456",
+                "darbo_laikas": "12:00–22:00",
+                "maps": "https://maps.google.com/?q=The+Moat+Restaurant+Naas",
+                "svetaine": "https://themoatrestaurant.ie",
+                "nuotrauka": ""
+            },
+            {
+                "id": "restoranai-2",
+                "pavadinimas": "Vie de Châteaux",
+                "aprasymas": "Autentiška prancūziška virtuvė su vyno pasirinkimu.",
+                "adresas": "Sallins Rd, Naas",
+                "telefonas": "045 789321",
+                "darbo_laikas": "13:00–23:00",
+                "maps": "https://maps.google.com/?q=Vie+de+Châteaux+Naas",
+                "svetaine": "https://viede.ie",
+                "nuotrauka": ""
+            },
+            {
+                "id": "restoranai-3",
+                "pavadinimas": "33 South Main",
+                "aprasymas": "Modernus gastrobaras Naaso centre, siūlantis platų maisto, vyno, kokteilių ir kavos pasirinkimą. Turi kelias erdves renginiams, įskaitant „The Jungle“, „The Snugs“ ir „The Conservatory“.",
+                "adresas": "33 South Main Street, Naas, Co. Kildare, W91 C9ER",
+                "telefonas": "045 938 374",
+                "darbo_laikas": "12:00–00:30",
+                "maps": "https://maps.google.com/?q=33+South+Main+Naas",
+                "svetaine": "https://33southmain.com",
+                "nuotrauka": "naas_restoranai.jpg"
+            }
+        ],
+        "kavines": [],
+        "greitas_maistas": [],
+        "maisto_parduotuves": [],
+        "specializuotos_parduotuves": [],
+        "turgeliai": []
+    },
+    "grozio_ir_sveikatos_paslaugos": {
+        "kirpyklos": [],
+        "nagu_salonai": [],
+        "grozio_salonai": [],
+        "vaistines": [],
+        "gydytojai": [],
+        "odontologai": [],
+        "masazai": []
+    },
+    "automobiliai_ir_transportas": {
+        "remontas": [],
+        "degalines": [],
+        "plovyklos": [],
+        "taksi": [],
+        "automobiliu_salonai": [],
+        "automobiliu_nuoma": []
+    },
+    "sportas_ir_laisvalaikis": {
+        "sporto_klubai": [],
+        "baseinai": [],
+        "parkai": [],
+        "laisvalaikio_centrai": [],
+        "zirgynai": []
+    },
+    "viesasis_sektorius": {
+        "savivaldybe": [],
+        "policija": [],
+        "biblioteka": [],
+        "mokyklos": [],
+        "darzeliai": [],
+        "ligonines": []
+    },
+    "apgyvendinimas": {
+        "viesbuciai": [],
+        "bnb": [],
+        "sveciu_namai": [],
+        "poilsio_kompleksai": []
+    },
+    "darbo_pasiulymai": {
+        "ieskau_darbo": [],
+        "siulau_darba": []
+    },
+    "": {
+        "": [
+            {
+                "id": "-1",
+                "pavadinimas": "",
+                "aprasymas": "",
+                "adresas": "",
+                "telefonas": "",
+                "darbo_laikas": "",
+                "maps": "",
+                "svetaine": "",
+                "nuotrauka": ""
+            }
+        ]
+    }
+}
