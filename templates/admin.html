@@ -1,32 +1,31 @@
 <!DOCTYPE html>
 <html lang="{{ lang }}">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <meta name="description" content="Administravimo skydelis - Naas City Services. Tvarkykite paslaugas ir pridėkite naujas.">
-    <meta name="keywords" content="admin, valdymas, paslaugos, Naas City, Naas, Airija, administravimas">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="Naas City Services">
+    <meta name="keywords" content="admin, valdymas, paslaugos, Naas City, Naas, Airija, administravimas" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Naas City Services" />
     <title>{{ translations.get('admin_title', 'Administravimas') }}</title>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="fade-in">
+<body class="bg-gray-100 text-gray-800 p-4">
 
 <!-- Popup notification -->
 {% if popup_message %}
-<div id="popup" class="popup {{ popup_type }}">
+<div class="mb-4 p-3 rounded text-white {{ 'bg-green-500' if popup_type == 'success' else 'bg-red-500' }}">
     {{ popup_message }}
 </div>
 {% endif %}
 
-<main class="content">
-    <h1>🛠️ {{ translations.get('admin_panel', 'Administravimo skydelis') }}</h1>
+<main class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-6">🛠️ {{ translations.get('admin_panel', 'Administravimo skydelis') }}</h1>
 
     <!-- Pridėti naują paslaugą -->
-    <form method="POST" enctype="multipart/form-data" class="form" novalidate>
+    <form method="POST" enctype="multipart/form-data" class="space-y-4" novalidate>
         {% for field in [
             {'label': 'Kategorija', 'name': 'kategorija', 'type': 'text', 'required': true, 'minlength': 2, 'maxlength': 50},
             {'label': 'Subkategorija', 'name': 'subkategorija', 'type': 'text', 'required': true, 'minlength': 2, 'maxlength': 50},
@@ -39,43 +38,49 @@
             {'label': 'Svetainė (neprivaloma)', 'name': 'svetaine', 'type': 'url', 'pattern': 'https?://.+'},
             {'label': 'Nuotrauka (neprivaloma)', 'name': 'nuotrauka', 'type': 'file'}
         ] %}
-        <div class="form-group">
-            <label for="{{ field.name }}">{{ field.label }}:</label>
+        <div>
+            <label for="{{ field.name }}" class="block font-medium mb-1">{{ field.label }}:</label>
             {% if field.type == 'textarea' %}
-                <textarea id="{{ field.name }}" name="{{ field.name }}" minlength="{{ field.minlength }}" maxlength="{{ field.maxlength }}" {% if field.required %}required{% endif %}></textarea>
+                <textarea id="{{ field.name }}" name="{{ field.name }}" class="w-full border rounded p-2" minlength="{{ field.minlength }}" maxlength="{{ field.maxlength }}" {% if field.required %}required{% endif %}></textarea>
             {% else %}
-                <input type="{{ field.type }}" id="{{ field.name }}" name="{{ field.name }}" minlength="{{ field.minlength }}" maxlength="{{ field.maxlength }}" {% if field.pattern %}pattern="{{ field.pattern }}"{% endif %} {% if field.required %}required{% endif %}>
+                <input type="{{ field.type }}" id="{{ field.name }}" name="{{ field.name }}" class="w-full border rounded p-2" minlength="{{ field.minlength }}" maxlength="{{ field.maxlength }}" {% if field.pattern %}pattern="{{ field.pattern }}"{% endif %} {% if field.required %}required{% endif %}>
             {% endif %}
         </div>
         {% endfor %}
-        <button type="submit" class="btn-save">➕ Pridėti paslaugą</button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+            ➕ Pridėti paslaugą
+        </button>
     </form>
 
-    <hr>
+    <hr class="my-6" />
 
     <!-- Esamos paslaugos -->
-    <h2>📋 Esamos paslaugos:</h2>
+    <h2 class="text-xl font-semibold mb-4">📋 Esamos paslaugos:</h2>
     {% for kategorija, subkategorijos in duomenys.items() %}
-    <section>
-        <h3>{{ kategorija.replace('_', ' ').title() }}</h3>
+    <section class="mb-6">
+        <h3 class="text-blue-700 font-bold">{{ kategorija.replace('_', ' ').title() }}</h3>
         {% for subkategorija, paslaugos in subkategorijos.items() %}
-        <h4>{{ subkategorija.replace('_', ' ').title() }}</h4>
-        <ul>
+        <h4 class="text-gray-700 mt-2 mb-1">{{ subkategorija.replace('_', ' ').title() }}</h4>
+        <ul class="space-y-2 text-sm">
             {% for paslauga in paslaugos %}
-            <li class="paslauga-item">
-                <strong>{{ paslauga.pavadinimas }}</strong> – {{ paslauga.adresas }}
-                <form action="{{ url_for('redaguoti_paslauga') }}" method="GET" style="display:inline;">
-                    <input type="hidden" name="kategorija" value="{{ kategorija }}">
-                    <input type="hidden" name="subkategorija" value="{{ subkategorija }}">
-                    <input type="hidden" name="index" value="{{ loop.index0 }}">
-                    <button type="submit" title="Redaguoti">✏️</button>
-                </form>
-                <form action="{{ url_for('istrinti_paslauga') }}" method="POST" style="display:inline;">
-                    <input type="hidden" name="kategorija" value="{{ kategorija }}">
-                    <input type="hidden" name="subkategorija" value="{{ subkategorija }}">
-                    <input type="hidden" name="index" value="{{ loop.index0 }}">
-                    <button type="submit" onclick="return confirm('Ar tikrai norite ištrinti?')" title="Ištrinti">❌</button>
-                </form>
+            <li class="bg-gray-50 border rounded p-3 flex justify-between items-center">
+                <div>
+                    <strong>{{ paslauga.pavadinimas }}</strong> – {{ paslauga.adresas }}
+                </div>
+                <div class="flex gap-2">
+                    <form action="{{ url_for('redaguoti_paslauga') }}" method="GET">
+                        <input type="hidden" name="kategorija" value="{{ kategorija }}">
+                        <input type="hidden" name="subkategorija" value="{{ subkategorija }}">
+                        <input type="hidden" name="index" value="{{ loop.index0 }}">
+                        <button type="submit" class="text-blue-600 hover:underline" title="Redaguoti">✏️</button>
+                    </form>
+                    <form action="{{ url_for('istrinti_paslauga') }}" method="POST" onsubmit="return confirm('Ar tikrai norite ištrinti?')">
+                        <input type="hidden" name="kategorija" value="{{ kategorija }}">
+                        <input type="hidden" name="subkategorija" value="{{ subkategorija }}">
+                        <input type="hidden" name="index" value="{{ loop.index0 }}">
+                        <button type="submit" class="text-red-600 hover:underline" title="Ištrinti">❌</button>
+                    </form>
+                </div>
             </li>
             {% endfor %}
         </ul>
@@ -83,21 +88,18 @@
     </section>
     {% endfor %}
 
-    <div style="margin-top:30px;">
-        <a href="{{ url_for('index') }}" class="btn-back">⬅️ Grįžti į pradžią</a>
+    <div class="mt-8">
+        <a href="{{ url_for('index') }}" class="text-blue-600 hover:underline">⬅️ Grįžti į pradžią</a>
     </div>
 </main>
 
 <!-- Footer -->
-<footer class="footer">
-    <div class="footer-inner">
-        <p>&copy; {{ year }} Naas City Services. {{ translations.get('rights_reserved', 'Visos teisės saugomos.') }}</p>
-        <p style="font-size:0.9rem;">Server: {{ server_info }}</p>
-    </div>
+<footer class="mt-12 text-center text-sm text-gray-500">
+    <p>&copy; {{ year }} Naas City Services. {{ translations.get('rights_reserved', 'Visos teisės saugomos.') }}</p>
+    <p>Server: {{ server_info }}</p>
 </footer>
 
 <!-- JS -->
 <script src="{{ url_for('static', filename='admin.js') }}"></script>
-
 </body>
 </html>

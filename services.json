@@ -2,17 +2,6 @@
     "maistas_ir_gerimai": {
         "restoranai": [
             {
-                "id": "restoranai-1",
-                "pavadinimas": "The Moat Restaurant",
-                "aprasymas": "Modernus europietiškas maistas su vaizdu į kanalą.",
-                "adresas": "Abbey St, Naas",
-                "telefonas": "045 123456",
-                "darbo_laikas": "12:00–22:00",
-                "maps": "https://maps.google.com/?q=The+Moat+Restaurant+Naas",
-                "svetaine": "https://themoatrestaurant.ie",
-                "nuotrauka": ""
-            },
-            {
                 "id": "restoranai-2",
                 "pavadinimas": "Vie de Châteaux",
                 "aprasymas": "Autentiška prancūziška virtuvė su vyno pasirinkimu.",
