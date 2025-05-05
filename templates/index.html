@@ -1,110 +1,78 @@
 <!DOCTYPE html>
-<html lang="{{ lang }}">
+<html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Naas City Services – {{ translations['description'] }}">
-    <meta name="keywords" content="Naas, paslaugos, restoranai, sportas, lankytinos vietos, Airija" />
-    <meta name="author" content="Naas City Services" />
-    <title>{{ translations['title'] }}</title>
-
-    <!-- Tailwind CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Naas City Guide</title>
+  <meta name="description" content="Naas City Guide – all services in one place: restaurants, beauty, sports and more." />
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-
 <body class="bg-gray-100 text-gray-800">
-    <a href="#kategorijos" class="sr-only focus:not-sr-only absolute top-0 left-0 bg-yellow-300 text-black px-4 py-2 z-50">Peršokti į kategorijas</a>
 
-    <!-- Header -->
-    <header class="bg-white shadow">
-        <nav class="container mx-auto flex items-center justify-between px-4 py-4">
-            <div class="text-xl font-bold text-blue-700">🇮🇪 Naas City Guide</div>
-            <ul class="flex space-x-6 text-sm md:text-base">
-                <li><a href="{{ url_for('index') }}" class="hover:text-blue-600">{{ translations['home'] }}</a></li>
-                <li><a href="{{ url_for('kontaktai') }}" class="hover:text-blue-600">{{ translations['contact'] }}</a></li>
-                <li><a href="{{ url_for('teisiskai') }}" class="hover:text-blue-600">{{ translations['legal'] }}</a></li>
-            </ul>
-        </nav>
-    </header>
+  <!-- Header -->
+  <header class="bg-white shadow py-4">
+    <div class="container mx-auto flex justify-between items-center px-4">
+      <h1 class="text-2xl font-bold text-blue-600">🇮🇪 Naas City Guide</h1>
+      <nav class="flex space-x-4">
+        <a href="{{ url_for('index') }}" class="text-gray-700 hover:text-blue-600">Home</a>
+        <a href="{{ url_for('contact') }}" class="text-gray-700 hover:text-blue-600">Contact</a>
+        <a href="{{ url_for('legal') }}" class="text-gray-700 hover:text-blue-600">Legal</a>
+      </nav>
+    </div>
+  </header>
 
-    <!-- Hero -->
-    <section class="bg-blue-100 py-12 text-center">
-        <div class="max-w-2xl mx-auto px-4">
-            <h1 class="text-4xl font-bold text-blue-800 mb-4">{{ translations['welcome'] }}</h1>
-            <p class="mb-2 text-lg">{{ translations['intro'] }}</p>
-            <p class="mb-6 text-sm">{{ translations['description'] }}</p>
-            <a href="#kategorijos" class="inline-block bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition">
-                📂 {{ translations['browse_services'] }}
-            </a>
-        </div>
+  <!-- Hero Video Section -->
+  <section class="relative h-[500px] overflow-hidden">
+    <video autoplay muted loop playsinline class="absolute w-full h-full object-cover">
+      <source src="{{ url_for('static', filename='uploads/hero_video.mp4') }}" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white text-center px-4">
+      <h2 class="text-4xl md:text-5xl font-bold mb-4">Welcome to Naas Guide</h2>
+      <p class="text-lg md:text-xl mb-2">Explore all local services, restaurants, beauty, sports, and more.</p>
+      <a href="#categories" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow">📂 Browse Services</a>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+    <!-- Sidebar -->
+    <aside class="md:col-span-1 bg-white p-4 rounded shadow" id="categories">
+      <h3 class="text-xl font-semibold mb-4">Categories</h3>
+      <ul class="space-y-2">
+        {% for main_category, subcategories in categories.items() %}
+        <li>
+          <strong class="text-blue-700">{{ main_category.replace('_', ' ') | title }}</strong>
+          <ul class="ml-4 mt-1 space-y-1">
+            {% for subcategory in subcategories.keys() %}
+            <li>
+              <a href="{{ url_for('services', category=main_category, subcategory=subcategory) }}" class="text-gray-700 hover:text-blue-600">
+                {{ subcategory.replace('_', ' ') | title }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </li>
+        {% endfor %}
+        <li>
+          <a href="{{ url_for('places') }}" class="text-gray-700 hover:text-blue-600">📍 Attractions</a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- About Section -->
+    <section class="md:col-span-3 bg-white p-6 rounded shadow">
+      <h2 class="text-2xl font-semibold mb-4">🌟 About This Project</h2>
+      <p class="mb-2">Our goal is to help people discover all services in Naas easily.</p>
+      <p>The platform will grow and improve over time – for locals and visitors alike.</p>
     </section>
+  </main>
 
-    <!-- Main -->
-    <main class="container mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-4 gap-6">
-        <!-- Sidebar -->
-        <aside class="md:col-span-1 bg-white p-4 rounded shadow" id="kategorijos">
-            <h3 class="text-xl font-semibold mb-4">{{ translations['categories'] }}</h3>
-            <ul class="space-y-3 text-sm">
-                {% for pagr_kategorija, subkategorijos in kategorijos.items() %}
-                <li>
-                    <strong class="text-blue-700">{{ pagr_kategorija.replace('_', ' ') | title }}</strong>
-                    <ul class="ml-4 mt-1 space-y-1">
-                        {% for subkategorija in subkategorijos %}
-                        <li>
-                            <a href="{{ url_for('paslaugos', kategorija=pagr_kategorija, subkategorija=subkategorija) }}" class="text-gray-700 hover:text-blue-600">
-                                {{ subkategorija.replace('_', ' ') | title }}
-                            </a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </li>
-                {% endfor %}
-                <li class="pt-2">
-                    <a href="{{ url_for('lankytinos_vietos') }}" class="text-blue-600 hover:underline">📍 {{ translations['places'] }}</a>
-                </li>
-            </ul>
-        </aside>
+  <!-- Footer -->
+  <footer class="bg-white text-center py-6 mt-10 text-sm text-gray-600 border-t">
+    <p>&copy; {{ year }} Naas City Guide. All rights reserved.</p>
+    <p>Server: {{ server_info }}</p>
+  </footer>
 
-        <!-- Content -->
-        <section class="md:col-span-3 bg-white p-6 rounded shadow">
-            <h2 class="text-2xl font-bold mb-4">🌟 {{ translations['about_project'] }}</h2>
-            <p class="mb-3">{{ translations['goal'] }}</p>
-            <p>{{ translations['growth'] }}</p>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-white border-t mt-12 py-6">
-        <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-sm">
-            <p class="text-gray-600">&copy; {{ year }} Naas City Guide. {{ translations['rights_reserved'] }}</p>
-            <p class="text-gray-500">Server: {{ server_info }}</p>
-        </div>
-        <div class="mt-4 text-center">
-            <div class="flex flex-wrap justify-center gap-2 text-xs">
-                {% for lang_code, lang_name in [('lt', 'Lietuva'), ('en', 'Jungtinė Karalystė'), ('de', 'Vokietija'), ('fr', 'Prancūzija'), ('it', 'Italija'), ('pt', 'Portugalija'), ('ro', 'Rumunija'), ('pl', 'Lenkija'), ('ru', 'Rusija'), ('uk', 'Ukraina')] %}
-                    <a href="{{ url_for('set_language', lang_code=lang_code) }}" class="text-blue-600 hover:underline">{{ lang_name }}</a>
-                {% endfor %}
-            </div>
-        </div>
-    </footer>
-
-    <!-- Scroll to top button -->
-    <button id="backToTop" title="Grįžti į viršų" class="fixed bottom-6 right-6 bg-blue-600 text-white p-2 rounded-full shadow hover:bg-blue-700 transition">
-        ⬆️
-    </button>
-
-    <!-- JS -->
-    <script src="{{ url_for('static', filename='admin.js') }}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const userLang = navigator.language || navigator.userLanguage;
-            const lang = userLang.slice(0, 2).toLowerCase();
-            const supportedLangs = ["lt", "en", "de", "fr", "it", "pt", "ro", "pl", "ru", "uk"];
-            if (supportedLangs.includes(lang) && !document.cookie.includes('language_selected=true')) {
-                window.location.href = "/set_language/" + lang;
-                document.cookie = "language_selected=true; path=/";
-            }
-        });
-    </script>
 </body>
 </html>

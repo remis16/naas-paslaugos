@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse local services in Naas by category and subcategory.">
+    <title>{{ category.replace('_', ' ') | title }} – Naas City Guide</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header>
+    <nav class="navbar">
+        <div class="logo">🇮🇪 Naas City Guide</div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            <li><a href="{{ url_for('legal') }}">Legal</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="hero">
+    <div class="hero-text">
+        <h1>{{ category.replace('_', ' ') | title }}</h1>
+        <p>Browse all available services below</p>
+    </div>
+</div>
+
+<div class="main-container">
+    <section class="content">
+        {% if services %}
+            <div class="services-container">
+                {% for service in services %}
+                    <div class="service-card">
+                        {% if service.image %}
+                            <img src="{{ url_for('static', filename=service.image) }}" class="service-image" alt="Service Image">
+                        {% endif %}
+
+                        <h3>{{ service.name or 'Unnamed Service' }}</h3>
+                        <p>{{ service.description or 'No description provided.' }}</p>
+
+                        <p><strong>Address:</strong> {{ service.address or 'No address provided.' }}</p>
+                        <p><strong>Phone:</strong> {{ service.phone or 'No phone number available.' }}</p>
+                        <p><strong>Hours:</strong> {{ service.working_hours or 'Not specified' }}</p>
+
+                        <p>
+                            {% if service.maps %}
+                                <a href="{{ service.maps }}" target="_blank" class="map-link">📍 View on Map</a>
+                            {% else %}
+                                <span>📍 Map not available</span>
+                            {% endif %}
+                        </p>
+
+                        <p>
+                            {% if service.website %}
+                                <a href="{{ service.website }}" target="_blank" class="website-link">🌐 Visit Website</a>
+                            {% else %}
+                                <span>🌐 No website</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-services-box">
+                <h2>No services found</h2>
+                <p>There are no services listed in this category at the moment.</p>
+                <a href="{{ url_for('index') }}" class="hero-button">⬅️ Back to Home</a>
+            </div>
+        {% endif %}
+    </section>
+</div>
+
+<footer class="footer">
+    <div class="footer-inner">
+        <p>&copy; {{ year }} Naas City Guide. All rights reserved.</p>
+    </div>
+</footer>
+
+</body>
+</html>
