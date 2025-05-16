@@ -28,26 +28,26 @@
     </div>
 </div>
 
-<div class="main-container">
+<main class="main-container">
     <section class="content">
         {% if services %}
             <div class="services-container">
                 {% for service in services %}
                     <div class="service-card">
                         {% if service.image %}
-                            <img src="{{ url_for('static', filename=service.image) }}" class="service-image" alt="Service Image">
+                            <img src="{{ url_for('static', filename=service.image) }}" class="service-image" alt="{{ service.name | e if service.name else 'Service Image' }}">
                         {% endif %}
 
-                        <h3>{{ service.name or 'Unnamed Service' }}</h3>
-                        <p>{{ service.description or 'No description provided.' }}</p>
+                        <h3>{{ service.name | e if service.name else 'Unnamed Service' }}</h3>
+                        <p>{{ service.description | e if service.description else 'No description provided.' }}</p>
 
-                        <p><strong>Address:</strong> {{ service.address or 'No address provided.' }}</p>
-                        <p><strong>Phone:</strong> {{ service.phone or 'No phone number available.' }}</p>
-                        <p><strong>Hours:</strong> {{ service.working_hours or 'Not specified' }}</p>
+                        <p><strong>Address:</strong> {{ service.address | e if service.address else 'No address provided.' }}</p>
+                        <p><strong>Phone:</strong> {{ service.phone | e if service.phone else 'No phone number available.' }}</p>
+                        <p><strong>Hours:</strong> {{ service.working_hours | e if service.working_hours else 'Not specified' }}</p>
 
                         <p>
                             {% if service.maps %}
-                                <a href="{{ service.maps }}" target="_blank" class="map-link">📍 View on Map</a>
+                                <a href="{{ service.maps | e }}" target="_blank" rel="noopener noreferrer" class="map-link">📍 View on Map</a>
                             {% else %}
                                 <span>📍 Map not available</span>
                             {% endif %}
@@ -55,13 +55,17 @@
 
                         <p>
                             {% if service.website %}
-                                <a href="{{ service.website }}" target="_blank" class="website-link">🌐 Visit Website</a>
+                                <a href="{{ service.website | e }}" target="_blank" rel="noopener noreferrer" class="website-link">🌐 Visit Website</a>
                             {% else %}
-                                <span>🌐 No website</span>
+                                <span>🌐 No website available</span>
                             {% endif %}
                         </p>
                     </div>
                 {% endfor %}
+            </div>
+            <div class="back-home" style="margin-top: 32px;">
+                <a href="{{ url_for('index') }}" class="back-link">⬅️ Back to Home</a>
+                <a href="{{ url_for('index') }}#categories" class="back-link" style="margin-left:16px;">📂 Back to Categories</a>
             </div>
         {% else %}
             <div class="no-services-box">
@@ -71,7 +75,7 @@
             </div>
         {% endif %}
     </section>
-</div>
+</main>
 
 <footer class="footer">
     <div class="footer-inner">

@@ -1,44 +1,53 @@
+# Flask app.py su slaptais duomenimis iš .env, saugesniu failų įkėlimu ir švaresniu kodu
+
 from flask import Flask, render_template, request, redirect, url_for, send_file, session
 from datetime import datetime
 import json
 import os
 from werkzeug.utils import secure_filename
-from flask_basicauth import BasicAuth
-from dotenv import load_dotenv
 import pandas as pd
 from io import BytesIO
 import platform
 import flask
+from dotenv import load_dotenv
+
 print("✅ Flask STARTED from this app.py file")
 
-app = Flask(__name__)
+# Įkeliame .env kintamuosius
 load_dotenv()
 
-# Security configuration
-app.secret_key = os.getenv('SECRET_KEY', 'your_secret_key')
-app.config['BASIC_AUTH_USERNAME'] = os.getenv('BASIC_AUTH_USERNAME')
-app.config['BASIC_AUTH_PASSWORD'] = os.getenv('BASIC_AUTH_PASSWORD')
-basic_auth = BasicAuth(app)
+app = Flask(__name__)
+app.secret_key = os.environ.get('SECRET_KEY', 'default_secret_key')
 
 UPLOAD_FOLDER = os.path.join('static', 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 
+ADMIN_USERNAME = os.environ.get('BASIC_AUTH_USERNAME', 'admin')
+ADMIN_PASSWORD = os.environ.get('BASIC_AUTH_PASSWORD', 'admin')
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 def load_json(filename):
     print(f"📂 Bandom įkelti failą: {filename}")
     with open(filename, 'r', encoding='utf-8') as f:
         return json.load(f)
-    
-def create_service_entry(request):
+
+def save_json(filename, data):
+    with open(filename, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+def create_service_entry(request, old_image=None):
     file = request.files.get('image')
-    path = ''
+    path = old_image or ''
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         path = os.path.join('uploads', filename)
         file.save(os.path.join('static', path))
+    elif file and file.filename:  # Jei failas netinkamas, ignoruojame
+        path = old_image or ''
     return {
         "name": request.form['name'],
         "description": request.form['description'],
@@ -49,6 +58,7 @@ def create_service_entry(request):
         "website": request.form.get('website', ''),
         "image": path
     }
+
 @app.route('/')
 def index():
     return render_template('index.html', categories=load_json('services.json'), year=datetime.now().year)
@@ -79,9 +89,27 @@ def places():
     data = load_json('places.json')
     return render_template('places.html', places=data, year=datetime.now().year)
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        if request.form['username'] == ADMIN_USERNAME and request.form['password'] == ADMIN_PASSWORD:
+            session['logged_in'] = True
+            return redirect('/admin')
+        else:
+            error = '❌ Wrong username or password'
+    return render_template('login.html', error=error, year=datetime.now().year)
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/')
+
 @app.route('/admin', methods=['GET', 'POST'])
-@basic_auth.required
 def admin():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
     data = load_json('services.json')
     popup_message = session.pop('popup_message', None)
     popup_type = session.pop('popup_type', 'success')
@@ -99,8 +127,10 @@ def admin():
     return render_template('admin.html', data=data, year=datetime.now().year, popup_message=popup_message, popup_type=popup_type, server_info=f"Python {platform.python_version()} | Flask {flask.__version__}")
 
 @app.route('/admin/delete', methods=['POST'])
-@basic_auth.required
 def delete_service():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
     category = request.form['category']
     subcategory = request.form['subcategory']
     index = int(request.form['index'])
@@ -121,8 +151,10 @@ def delete_service():
     return redirect(url_for('admin'))
 
 @app.route('/admin/edit', methods=['GET', 'POST'])
-@basic_auth.required
 def edit_service():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
     data = load_json('services.json')
     if request.method == 'GET':
         category = request.args.get('category')
@@ -136,8 +168,9 @@ def edit_service():
         index = int(request.form['index'])
 
         old_image = data[category][subcategory][index].get('image')
-        new_service = create_service_entry(request)
+        new_service = create_service_entry(request, old_image=old_image)
 
+        # Jei įkeltas naujas paveikslėlis, seną ištrinti
         if old_image and old_image != new_service['image']:
             image_path = os.path.join('static', old_image)
             if os.path.exists(image_path):
@@ -150,8 +183,10 @@ def edit_service():
         return redirect(url_for('admin'))
 
 @app.route('/admin/export')
-@basic_auth.required
 def export():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
     data = load_json('services.json')
     rows = [
         {**service, 'category': cat, 'subcategory': subcat}

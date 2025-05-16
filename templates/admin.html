@@ -7,99 +7,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Naas City Services">
     <title>Admin Panel</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body class="bg-gray-100 text-gray-800 p-4">
-
-{% if popup_message %}
-<div class="mb-4 p-3 rounded text-white {{ popup_type == 'success' ? 'bg-green-500' : 'bg-red-500' }}">
-    {{ popup_message }}
-</div>
-{% endif %}
-
-<main class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-2xl font-bold mb-6">🛠️ Admin Panel</h1>
-
-    <!-- Add New Service -->
-    <form method="POST" enctype="multipart/form-data" class="space-y-4" novalidate>
-        {% for field in [
-            {'label': 'Category', 'name': 'category', 'type': 'text', 'required': true, 'minlength': 2, 'maxlength': 50},
-            {'label': 'Subcategory', 'name': 'subcategory', 'type': 'text', 'required': true, 'minlength': 2, 'maxlength': 50},
-            {'label': 'Service Name', 'name': 'name', 'type': 'text', 'required': true, 'minlength': 2, 'maxlength': 100},
-            {'label': 'Description', 'name': 'description', 'type': 'textarea', 'required': true, 'minlength': 10, 'maxlength': 1000},
-            {'label': 'Address', 'name': 'address', 'type': 'text', 'required': true, 'minlength': 5, 'maxlength': 150},
-            {'label': 'Phone', 'name': 'phone', 'type': 'tel', 'required': true, 'pattern': '\\+?\\d{7,15}', 'title': 'Enter a valid phone number'},
-            {'label': 'Working Hours', 'name': 'working_hours', 'type': 'text', 'required': true, 'minlength': 2, 'maxlength': 100},
-            {'label': 'Google Maps Link', 'name': 'maps', 'type': 'url', 'required': true, 'pattern': 'https?://.+', 'title': 'Must start with https://'},
-            {'label': 'Website (optional)', 'name': 'website', 'type': 'url', 'pattern': 'https?://.'},
-            {'label': 'Image (optional)', 'name': 'image', 'type': 'file'}
-        ] %}
-        <div>
-            <label for="{{ field.name }}" class="block font-medium mb-1">{{ field.label }}:</label>
-            {% if field.type == 'textarea' %}
-                <textarea id="{{ field.name }}" name="{{ field.name }}" class="w-full border rounded p-2" 
-                          {% if field.required %} required {% endif %} 
-                          {% if field.minlength %} minlength="{{ field.minlength }}" {% endif %} 
-                          {% if field.maxlength %} maxlength="{{ field.maxlength }}" {% endif %}></textarea>
-            {% else %}
-                <input type="{{ field.type }}" id="{{ field.name }}" name="{{ field.name }}" class="w-full border rounded p-2" 
-                       {% if field.required %} required {% endif %} 
-                       {% if field.minlength %} minlength="{{ field.minlength }}" {% endif %} 
-                       {% if field.maxlength %} maxlength="{{ field.maxlength }}" {% endif %} 
-                       {% if field.pattern %} pattern="{{ field.pattern }}" title="{{ field.title }}" {% endif %}>
-            {% endif %}
-        </div>
-        {% endfor %}
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-            ➕ Add Service
-        </button>
-    </form>
-
-    <hr class="my-6">
-
-    <h2 class="text-xl font-semibold mb-4">📋 Existing Services:</h2>
-    {% for category, subcategories in data.items() %}
-    <section class="mb-6">
-        <h3 class="text-blue-700 font-bold">{{ category.replace('_', ' ').title() }}</h3>
-        {% for subcategory, services in subcategories.items() %}
-        <h4 class="text-gray-700 mt-2 mb-1">{{ subcategory.replace('_', ' ').title() }}</h4>
-        <ul class="space-y-2 text-sm">
-            {% for service in services %}
-            <li class="bg-gray-50 border rounded p-3 flex justify-between items-center">
-                <div>
-                    <strong>{{ service.name }}</strong> – {{ service.address }}
-                </div>
-                <div class="flex gap-2">
-                    <form action="{{ url_for('edit_service') }}" method="GET">
-                        <input type="hidden" name="category" value="{{ category }}">
-                        <input type="hidden" name="subcategory" value="{{ subcategory }}">
-                        <input type="hidden" name="index" value="{{ loop.index0 }}">
-                        <button type="submit" class="text-blue-600 hover:underline" title="Edit">✏️</button>
-                    </form>
-                    <form action="{{ url_for('delete_service') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this service?')">
-                        <input type="hidden" name="category" value="{{ category }}">
-                        <input type="hidden" name="subcategory" value="{{ subcategory }}">
-                        <input type="hidden" name="index" value="{{ loop.index0 }}">
-                        <button type="submit" class="text-red-600 hover:underline" title="Delete">❌</button>
-                    </form>
-                </div>
-            </li>
-            {% endfor %}
-        </ul>
-        {% endfor %}
-    </section>
-    {% endfor %}
-
-    <div class="mt-8">
-        <a href="{{ url_for('index') }}" class="text-blue-600 hover:underline">⬅️ Back to Home</a>
+<body>
+    {% if popup_message %}
+    <div class="popup {% if popup_type == 'success' %}popup-success{% else %}popup-error{% endif %}">
+        {{ popup_message }}
     </div>
-</main>
+    {% endif %}
 
-<footer class="mt-12 text-center text-sm text-gray-500">
-    <p>&copy; {{ year }} Naas City Services. All rights reserved.</p>
-    <p>Server: {{ server_info }}</p>
-</footer>
+    <main class="container admin-main">
+        <h1 class="admin-title">🛠️ Admin Panel</h1>
 
-<script src="{{ url_for('static', filename='admin.js') }}"></script>
+        <!-- Add New Service -->
+        <form method="POST" enctype="multipart/form-data" class="admin-form" novalidate>
+            {% for field in [
+                {'label': 'Category', 'name': 'category', 'type': 'text', 'required': true, 'minlength': 2, 'maxlength': 50},
+                {'label': 'Subcategory', 'name': 'subcategory', 'type': 'text', 'required': true, 'minlength': 2, 'maxlength': 50},
+                {'label': 'Service Name', 'name': 'name', 'type': 'text', 'required': true, 'minlength': 2, 'maxlength': 100},
+                {'label': 'Description', 'name': 'description', 'type': 'textarea', 'required': true, 'minlength': 10, 'maxlength': 1000},
+                {'label': 'Address', 'name': 'address', 'type': 'text', 'required': true, 'minlength': 5, 'maxlength': 150},
+                {'label': 'Phone', 'name': 'phone', 'type': 'tel', 'required': true, 'pattern': '\\+?\\d{7,15}', 'title': 'Enter a valid phone number'},
+                {'label': 'Working Hours', 'name': 'working_hours', 'type': 'text', 'required': true, 'minlength': 2, 'maxlength': 100},
+                {'label': 'Google Maps Link', 'name': 'maps', 'type': 'url', 'required': true, 'pattern': 'https?://.+', 'title': 'Must start with https://'},
+                {'label': 'Website (optional)', 'name': 'website', 'type': 'url', 'pattern': 'https?://.'},
+                {'label': 'Image (optional)', 'name': 'image', 'type': 'file'}
+            ] %}
+            <div class="form-group">
+                <label for="{{ field.name }}" class="form-label">{{ field.label }}:</label>
+                {% if field.type == 'textarea' %}
+                    <textarea id="{{ field.name }}" name="{{ field.name }}" class="form-input"
+                        {% if field.required %} required {% endif %}
+                        {% if field.minlength %} minlength="{{ field.minlength }}" {% endif %}
+                        {% if field.maxlength %} maxlength="{{ field.maxlength }}" {% endif %}></textarea>
+                {% else %}
+                    <input type="{{ field.type }}" id="{{ field.name }}" name="{{ field.name }}" class="form-input"
+                        {% if field.required %} required {% endif %}
+                        {% if field.minlength %} minlength="{{ field.minlength }}" {% endif %}
+                        {% if field.maxlength %} maxlength="{{ field.maxlength }}" {% endif %}
+                        {% if field.pattern %} pattern="{{ field.pattern }}" title="{{ field.title }}" {% endif %}>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <button type="submit" class="button">➕ Add Service</button>
+        </form>
+
+        <hr class="divider">
+
+        <h2 class="admin-subtitle">📋 Existing Services:</h2>
+        {% for category, subcategories in data.items() %}
+        <section class="admin-category">
+            <h3 class="category-title">{{ category.replace('_', ' ').title() }}</h3>
+            {% for subcategory, services in subcategories.items() %}
+            <h4 class="subcategory-title">{{ subcategory.replace('_', ' ').title() }}</h4>
+            <ul class="service-list">
+                {% for service in services %}
+                <li class="service-item">
+                    <div>
+                        <strong>{{ service.name | e }}</strong> – {{ service.address | e }}
+                    </div>
+                    <div class="service-actions">
+                        <form action="{{ url_for('edit_service') }}" method="GET" class="inline-form">
+                            <input type="hidden" name="category" value="{{ category }}">
+                            <input type="hidden" name="subcategory" value="{{ subcategory }}">
+                            <input type="hidden" name="index" value="{{ loop.index0 }}">
+                            <button type="submit" class="edit-link" title="Edit">✏️</button>
+                        </form>
+                        <form action="{{ url_for('delete_service') }}" method="POST" class="inline-form" onsubmit="return confirm('Are you sure you want to delete this service?')">
+                            <input type="hidden" name="category" value="{{ category }}">
+                            <input type="hidden" name="subcategory" value="{{ subcategory }}">
+                            <input type="hidden" name="index" value="{{ loop.index0 }}">
+                            <button type="submit" class="delete-link" title="Delete">❌</button>
+                        </form>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endfor %}
+        </section>
+        {% endfor %}
+
+        <div class="back-home">
+            <a href="{{ url_for('index') }}" class="back-link">⬅️ Back to Home</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; {{ year }} Naas City Services. All rights reserved.</p>
+        <p>Server: {{ server_info }}</p>
+    </footer>
 </body>
 </html>

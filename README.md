@@ -1,58 +1,76 @@
-# 🇮🇪 Naas Paslaugų Gidas
+# 🇮🇪 Naas City Services Guide
 
-**Viskas apie vietines paslaugas vienoje vietoje – restoranai, grožio salonai, sporto klubai ir dar daugiau Naas mieste.**
-
----
-
-## 🔍 Apie projektą
-
-Šis projektas – tai informacinė platforma, kuri padeda gyventojams ir turistams greitai rasti visas svarbiausias paslaugas Naas mieste, Airijoje.
-
-### Funkcijos:
-
-- ✅ Peržiūrėti paslaugas pagal kategorijas
-- ✅ Paieška ir filtravimas
-- ✅ Pridėjimas, redagavimas ir trynimas per admin puslapį
-- ✅ Eksportavimas į Excel
-- ✅ Lankytinų vietų puslapis su žemėlapiais
+**All local services in one place – restaurants, beauty salons, gyms, and more in Naas, Ireland.**
 
 ---
 
-## 📸 Pavyzdys
+## 🔍 About the Project
 
-![Svetainės vaizdas](static/uploads/pavyzdys.png)
+This project is an information platform that helps residents and visitors quickly find all essential services in Naas, Ireland.
+
+### Features:
+
+- ✅ Browse services by category
+- ✅ Search and filtering
+- ✅ Add, edit, and delete services via the admin panel
+- ✅ Export services to Excel
+- ✅ Attractions page with maps
 
 ---
 
-## 🚀 Paleidimas lokaliai
+## 📸 Example
 
-1. Atsisiųskite projektą:
+![Website screenshot](static/uploads/pavyzdys.png)
+
+---
+
+## 🚀 Running Locally
+
+1. Clone the project:
 
 ```bash
 git clone https://github.com/remis16/naas-paslaugos.git
 cd naas-paslaugos
-Įdiekite priklausomybes:
-kalba-bash
-Nukopijuokite kodą
-pip install -r requirements.txt
-Sukurkite .envfailą:
-BASIC_AUTH_USERNAME=
-BASIC_AUTH_PASSWORD=
-Paleisti aplikaciją:
-kalba-bash
-Nukopijuokite kodą
-python app.py
-📁 Struktūra
-app.py– pagrindinis Flask aplikacijos failas
-templates/– HTML šablonai
-static/– CSS, nuotraukos, JS
-services.json– visų paslaugų duomenys
-lankytinos_vietos.json– lankytinų vietų duomenys
-📬 Kontaktai
-Kūrėjas: Remi
-El. paštas: [el.paštas@example.com]
+```
 
-⚠️ Licencija
-Šis projektas yra atviras, bet komerciniam naudojimui reikia autoriaus leidimo.
+2. Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+3. Create a `.env` file and add your credentials:
 
 ```
+SECRET_KEY=your_secret_key
+BASIC_AUTH_USERNAME=your_admin_username
+BASIC_AUTH_PASSWORD=your_admin_password
+```
+
+4. Run the application:
+
+```bash
+python app.py
+```
+
+---
+
+## 📁 Project Structure
+
+- `app.py` – main Flask application file
+- `templates/` – HTML templates
+- `static/` – CSS, images, JS
+- `services.json` – all services data
+- `places.json` – attractions data
+
+---
+
+## 📬 Contact
+
+Developer: Remi  
+Email: [el.paštas@example.com]
+
+---
+
+⚠️ License  
+This project is open source, but commercial use requires the author's permission.

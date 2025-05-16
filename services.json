@@ -1,123 +1,135 @@
 {
-    "food_and_drinks": {
-        "restaurants": [
-            {
-                "id": "restaurant-1",
-                "name": "Vie de Châteaux",
-                "description": "Authentic French cuisine with a wine selection.",
-                "address": "Sallins Rd, Naas",
-                "phone": "045 789321",
-                "working_hours": "13:00–23:00",
-                "maps": "https://maps.google.com/?q=Vie+de+Châteaux+Naas",
-                "website": "https://viede.ie",
-                "image": null
-            },
-            {
-                "id": "restaurant-2",
-                "name": "33 South Main",
-                "description": "A modern gastrobar in the center of Naas offering a wide selection of food, wine, cocktails, and coffee. Includes several event spaces such as 'The Jungle', 'The Snugs', and 'The Conservatory'.",
-                "address": "33 South Main Street, Naas, Co. Kildare, W91 C9ER",
-                "phone": "045 938 374",
-                "working_hours": "12:00–00:30",
-                "maps": "https://maps.google.com/?q=33+South+Main+Naas",
-                "website": "https://33southmain.com",
-                "image": "naas_restoranai.jpg"
-            }
-        ],
-        "cafes": [],
-        "fast_food": [],
-        "grocery_stores": [],
-        "specialty_stores": [],
-        "markets": []
-    },
-    "beauty_and_health": {
-        "hair_salons": [
-            {
-                "id": "hair-1",
-                "name": "Elegance Hair Studio",
-                "description": "Modern unisex hair salon offering cuts, coloring, and styling.",
-                "address": "Main Street, Naas",
-                "phone": "045 123456",
-                "working_hours": "09:00–18:00",
-                "maps": "https://maps.google.com/?q=Elegance+Hair+Studio+Naas",
-                "website": null,
-                "image": null
-            }
-        ],
-        "nail_salons": [],
-        "beauty_salons": [],
-        "pharmacies": [],
-        "doctors": [],
-        "dentists": [],
-        "massage": []
-    },
-    "automotive_and_transport": {
-        "repair": [],
-        "petrol_stations": [],
-        "car_wash": [
-            {
-                "id": "carwash-1",
-                "name": "Sparkle Car Wash",
-                "description": "Full exterior and interior cleaning with eco-friendly products.",
-                "address": "Newbridge Road, Naas",
-                "phone": "045 654321",
-                "working_hours": "08:00–19:00",
-                "maps": "https://maps.google.com/?q=Sparkle+Car+Wash+Naas",
-                "website": null,
-                "image": null
-            }
-        ],
-        "taxis": [],
-        "car_dealerships": [],
-        "car_rental": []
-    },
-    "sports_and_leisure": {
-        "gyms": [
-            {
-                "id": "gym-1",
-                "name": "Naas Fitness Club",
-                "description": "Fully equipped gym with personal training and group classes.",
-                "address": "Kilcullen Road, Naas",
-                "phone": "045 777888",
-                "working_hours": "06:00–22:00",
-                "maps": "https://maps.google.com/?q=Naas+Fitness+Club",
-                "website": "https://naasfitness.ie",
-                "image": null
-            }
-        ],
-        "swimming_pools": [],
-        "parks": [],
-        "leisure_centers": [],
-        "equestrian_centers": []
-    },
-    "public_services": {
-        "municipality": [],
-        "garda": [],
-        "library": [],
-        "schools": [],
-        "kindergartens": [],
-        "hospitals": []
-    },
-    "accommodation": {
-        "hotels": [
-            {
-                "id": "hotel-1",
-                "name": "Naas Court Hotel",
-                "description": "Affordable hotel in the heart of Naas with bar and restaurant.",
-                "address": "South Main St, Naas",
-                "phone": "045 111222",
-                "working_hours": "24/7",
-                "maps": "https://maps.google.com/?q=Naas+Court+Hotel",
-                "website": "https://naascourthotel.ie",
-                "image": null
-            }
-        ],
-        "bed_and_breakfast": [],
-        "guesthouses": [],
-        "resorts": []
-    },
-    "job_offers": {
-        "looking_for_job": [],
-        "offering_job": []
-    }
+  "food_and_drinks": {
+    "restaurants": [
+      {
+        "id": "restaurant-1",
+        "name": "Vie de Châteaux",
+        "description": "Authentic French cuisine with a wine selection.",
+        "address": "Sallins Rd, Naas",
+        "phone": "045 789321",
+        "working_hours": "13:00–23:00",
+        "maps": "https://maps.google.com/?q=Vie+de+Châteaux+Naas",
+        "website": "https://viede.ie",
+        "image": null
+      },
+      {
+        "id": "restaurant-2",
+        "name": "33 South Main",
+        "description": "A modern gastrobar in the center of Naas offering a wide selection of food, wine, cocktails, and coffee. Includes several event spaces such as 'The Jungle', 'The Snugs', and 'The Conservatory'.",
+        "address": "33 South Main Street, Naas, Co. Kildare, W91 C9ER",
+        "phone": "045 938 374",
+        "working_hours": "12:00–00:30",
+        "maps": "https://maps.google.com/?q=33+South+Main+Naas",
+        "website": "https://33southmain.com",
+        "image": "naas_restoranai.jpg"
+      }
+    ],
+    "cafes": [],
+    "fast_food": [],
+    "grocery_stores": [],
+    "specialty_stores": [],
+    "markets": []
+  },
+  "beauty_and_health": {
+    "hair_salons": [
+      {
+        "id": "hair-1",
+        "name": "Elegance Hair Studio",
+        "description": "Modern unisex hair salon offering cuts, coloring, and styling.",
+        "address": "Main Street, Naas",
+        "phone": "045 123456",
+        "working_hours": "09:00–18:00",
+        "maps": "https://maps.google.com/?q=Elegance+Hair+Studio+Naas",
+        "website": null,
+        "image": null
+      }
+    ],
+    "nail_salons": [],
+    "beauty_salons": [],
+    "pharmacies": [],
+    "doctors": [],
+    "dentists": [],
+    "massage": []
+  },
+  "automotive_and_transport": {
+    "repair": [
+      {
+        "id": "repair-1",
+        "name": "Naas Body Repair",
+        "description": "Naas Body Repair is a professional auto repair shop offering car bodywork, rust removal, spray painting, and insurance claim services.",
+        "address": "Newbridge Road, Naas West, Co. Kildare, W91 VK44",
+        "phone": "085 227 2881",
+        "working_hours": "Mon–Fri 9:00–18:00 (closed 13:00–14:00), Closed on weekends",
+        "maps": "https://maps.app.goo.gl/ujctjgYk3xRDCsYF7",
+        "website": "https://naasbodyrepair.ie",
+        "image": ""
+      }
+    ],
+    "petrol_stations": [],
+    "car_wash": [
+      {
+        "id": "carwash-1",
+        "name": "Sparkle Car Wash",
+        "description": "Full exterior and interior cleaning with eco-friendly products.",
+        "address": "Newbridge Road, Naas",
+        "phone": "045 654321",
+        "working_hours": "08:00–19:00",
+        "maps": "https://maps.google.com/?q=Sparkle+Car+Wash+Naas",
+        "website": null,
+        "image": null
+      }
+    ],
+    "taxis": [],
+    "car_dealerships": [],
+    "car_rental": []
+  },
+  "sports_and_leisure": {
+    "gyms": [
+      {
+        "id": "gym-1",
+        "name": "Naas Fitness Club",
+        "description": "Fully equipped gym with personal training and group classes.",
+        "address": "Kilcullen Road, Naas",
+        "phone": "045 777888",
+        "working_hours": "06:00–22:00",
+        "maps": "https://maps.google.com/?q=Naas+Fitness+Club",
+        "website": "https://naasfitness.ie",
+        "image": null
+      }
+    ],
+    "swimming_pools": [],
+    "parks": [],
+    "leisure_centers": [],
+    "equestrian_centers": []
+  },
+  "public_services": {
+    "municipality": [],
+    "garda": [],
+    "library": [],
+    "schools": [],
+    "kindergartens": [],
+    "hospitals": []
+  },
+  "accommodation": {
+    "hotels": [
+      {
+        "id": "hotel-1",
+        "name": "Naas Court Hotel",
+        "description": "Affordable hotel in the heart of Naas with bar and restaurant.",
+        "address": "South Main St, Naas",
+        "phone": "045 111222",
+        "working_hours": "24/7",
+        "maps": "https://maps.google.com/?q=Naas+Court+Hotel",
+        "website": "https://naascourthotel.ie",
+        "image": null
+      }
+    ],
+    "bed_and_breakfast": [],
+    "guesthouses": [],
+    "resorts": []
+  },
+  "job_offers": {
+    "looking_for_job": [],
+    "offering_job": []
+  }
 }

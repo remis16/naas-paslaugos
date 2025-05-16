@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Service</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 py-6 px-4 text-gray-800">
+
+<main class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-6">✏️ Edit Service</h1>
+
+    <form method="POST" enctype="multipart/form-data" autocomplete="off" class="space-y-4">
+        <input type="hidden" name="category" value="{{ category }}">
+        <input type="hidden" name="subcategory" value="{{ subcategory }}">
+        <input type="hidden" name="index" value="{{ index }}">
+
+        <div>
+            <label for="service-name" class="block font-medium mb-1">Service Name:</label>
+            <input id="service-name" type="text" name="name" value="{{ service.name }}" required class="w-full border p-2 rounded">
+        </div>
+
+        <div>
+            <label for="service-description" class="block font-medium mb-1">Description:</label>
+            <textarea id="service-description" name="description" required class="w-full border p-2 rounded" minlength="10" maxlength="1000">{{ service.description }}</textarea>
+        </div>
+
+        <div>
+            <label for="service-address" class="block font-medium mb-1">Address:</label>
+            <input id="service-address" type="text" name="address" value="{{ service.address }}" required class="w-full border p-2 rounded">
+        </div>
+
+        <div>
+            <label for="service-phone" class="block font-medium mb-1">Phone:</label>
+            <input id="service-phone" type="tel" name="phone" value="{{ service.phone }}" pattern="\+?\d{7,15}" title="Enter a valid phone number" required class="w-full border p-2 rounded">
+        </div>
+
+        <div>
+            <label for="service-working-hours" class="block font-medium mb-1">Working Hours:</label>
+            <input id="service-working-hours" type="text" name="working_hours" value="{{ service.working_hours }}" required class="w-full border p-2 rounded">
+        </div>
+
+        <div>
+            <label for="service-maps" class="block font-medium mb-1">Google Maps Link:</label>
+            <input id="service-maps" type="url" name="maps" value="{{ service.maps }}" required class="w-full border p-2 rounded">
+        </div>
+
+        <div>
+            <label for="service-website" class="block font-medium mb-1">Website (optional):</label>
+            <input id="service-website" type="url" name="website" value="{{ service.website }}" class="w-full border p-2 rounded">
+        </div>
+
+        <div>
+            <label for="service-image" class="block font-medium mb-1">Upload New Image (optional):</label>
+            <input id="service-image" type="file" name="image" accept="image/*" class="w-full border p-2 rounded">
+        </div>
+
+        <div class="flex justify-between mt-6">
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                💾 Save Changes
+            </button>
+            <a href="{{ url_for('admin') }}" class="text-blue-600 hover:underline self-center">⬅ Back to Admin</a>
+        </div>
+    </form>
+</main>
+
+<footer class="mt-8 text-center text-sm text-gray-500">
+  <p>&copy; {{ year }} Naas City Guide. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
