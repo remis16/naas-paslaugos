@@ -1,0 +1,16 @@
+__pycache__/**
+node_modules/**
+static/**
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.pdf
+*.zip
+*.gz
+*.log
+secrets/**
+.env*
+*.key
+*.pem
