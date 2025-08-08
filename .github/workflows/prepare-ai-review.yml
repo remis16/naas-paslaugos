@@ -1,0 +1,74 @@
+name: Prepare AI Review Bundle
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ensure tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq rsync zip
+
+      - name: Define include/ignore defaults
+        run: |
+          if [ ! -f .ai-review.include ]; then
+            cat > .ai-review.include <<'EOF'
+**/*.md
+**/*.txt
+**/*.py
+**/*.json
+**/*.html
+**/*.css
+**/*.js
+**/*.yml
+**/*.yaml
+**/*.jinja
+**/*.jinja2
+**/*.j2
+templates/**/*.*
+EOF
+          fi
+
+          if [ ! -f .ai-review.ignore ]; then
+            cat > .ai-review.ignore <<'EOF'
+__pycache__/**
+node_modules/**
+static/**
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.pdf
+*.zip
+*.gz
+*.log
+secrets/**
+.env*
+*.key
+*.pem
+EOF
+          fi
+
+      - name: Build filtered source tree
+        run: |
+          set -euo pipefail
+          mkdir -p .ai-review/src
+          while IFS= read -r line; do
+            [ -z "$line" ] && continue
+            echo "--include=$line"
+          done < .ai-review.include > /tmp/include_args
+
+          rsync -av --prune-empty-dirs \
+            --exclude='*' \
+            $(cat /tmp/include_args) \
+            --exclude-from=.ai-review.ignore \
+            ./ .
