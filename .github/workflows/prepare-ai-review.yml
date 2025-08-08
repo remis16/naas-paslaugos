@@ -12,63 +12,37 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Ensure tools
+      - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y jq rsync zip
+          sudo apt-get install -y zip
 
-      - name: Define include/ignore defaults
-        run: |
-          if [ ! -f .ai-review.include ]; then
-            cat > .ai-review.include <<'EOF'
-**/*.md
-**/*.txt
-**/*.py
-**/*.json
-**/*.html
-**/*.css
-**/*.js
-**/*.yml
-**/*.yaml
-**/*.jinja
-**/*.jinja2
-**/*.j2
-templates/**/*.*
-EOF
-          fi
-
-          if [ ! -f .ai-review.ignore ]; then
-            cat > .ai-review.ignore <<'EOF'
-__pycache__/**
-node_modules/**
-static/**
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.webp
-*.pdf
-*.zip
-*.gz
-*.log
-secrets/**
-.env*
-*.key
-*.pem
-EOF
-          fi
-
-      - name: Build filtered source tree
+      - name: Create manifest and zip (simple)
         run: |
           set -euo pipefail
-          mkdir -p .ai-review/src
-          while IFS= read -r line; do
-            [ -z "$line" ] && continue
-            echo "--include=$line"
-          done < .ai-review.include > /tmp/include_args
+          find . -type f \
+            \( -name "*.py" -o -name "*.html" -o -name "*.css" -o -name "*.js" -o -name "*.json" -o -name "*.md" -o -name "*.txt" -o -name "*.yml" -o -name "*.yaml" \) \
+            -not -path "./node_modules/*" \
+            -not -path "./static/*" \
+            -not -path "./__pycache__/*" \
+            > manifest.txt
+          REPO="$GITHUB_REPOSITORY"
+          SHA="$GITHUB_SHA"
+          echo "# Files prepared for AI review" > FILES_TO_REVIEW.md
+          echo "Repository: $REPO" >> FILES_TO_REVIEW.md
+          echo "Commit: $SHA" >> FILES_TO_REVIEW.md
+          echo "" >> FILES_TO_REVIEW.md
+          echo "## Example raw links" >> FILES_TO_REVIEW.md
+          head -n 50 manifest.txt | sed "s|^\.\/|https://raw.githubusercontent.com/$REPO/$SHA/|" >> FILES_TO_REVIEW.md
+          zip -r review_bundle.zip . \
+            -x "node_modules/**" "static/**" "__pycache__/**" \
+               "*.png" "*.jpg" "*.jpeg" "*.gif" "*.webp" "*.pdf" "*.zip" "*.gz" "*.log" \
+               "secrets/**" ".env*" "*.key" "*.pem"
+          zip -j review_bundle.zip manifest.txt FILES_TO_REVIEW.md
 
-          rsync -av --prune-empty-dirs \
-            --exclude='*' \
-            $(cat /tmp/include_args) \
-            --exclude-from=.ai-review.ignore \
-            ./ .
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-review-bundle
+          path: review_bundle.zip
+          if-no-files-found: error
