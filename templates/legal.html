@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Teisinė Informacija{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-8">
+    <h1 class="text-3xl font-extrabold text-gray-900 border-b pb-2 flex items-center">
+        <i data-lucide="scale" class="w-8 h-8 mr-3 text-purple-600"></i> Teisinė Informacija
+    </h1>
+
+    <div class="bg-white p-8 rounded-xl shadow-2xl border border-gray-100 space-y-8">
+
+        <section>
+            <h3 class="text-xl font-semibold mb-3 text-gray-800 flex items-center">
+                <i data-lucide="shield" class="w-5 h-5 mr-2 text-green-600"></i> 🛡️ Privatumas (Privacy)
+            </h3>
+            <p class="text-gray-700 leading-relaxed">
+                Ši svetainė nerenka, nesaugo ir nesidalina jokia asmenine informacija. Nenaudojami jokie slapukai (cookies), sekimo sistemos ar analizės įrankiai.
+                Visas turinys pateikiamas tik viešosios informacijos tikslais.
+            </p>
+        </section>
+
+        <section>
+            <h3 class="text-xl font-semibold mb-3 text-gray-800 flex items-center">
+                <i data-lucide="alert-triangle" class="w-5 h-5 mr-2 text-red-600"></i> ⚖️ Atsakomybės Apribojimas (Disclaimer)
+            </h3>
+            <p class="text-gray-700 leading-relaxed">
+                Šioje svetainėje pateikta informacija skirta tik bendriesiems informaciniams tikslams. Nors dedamos visos pastangos tikslumui užtikrinti, garantijos nesuteikiamos.
+                Naudotojai yra visiškai atsakingi už bet kokius sprendimus, priimtus remiantis pateikta informacija.
+            </p>
+        </section>
+
+        <section>
+            <h3 class="text-xl font-semibold mb-3 text-gray-800 flex items-center">
+                <i data-lucide="megaphone" class="w-5 h-5 mr-2 text-yellow-600"></i> 📢 Reklama
+            </h3>
+            <p class="text-gray-700 leading-relaxed">
+                Visas reklaminis ar rėmėjų turinys šioje svetainėje yra skelbiamas tik svetainės administratoriaus.
+                Informacija apie reklamuojamas paslaugas įkeliama rankiniu būdu – nereikalingos jokios naudotojo paskyros, duomenų teikimas ar registracija.
+            </p>
+        </section>
+
+        <section>
+            <h3 class="text-xl font-semibold mb-3 text-gray-800 flex items-center">
+                <i data-lucide="mail" class="w-5 h-5 mr-2 text-blue-600"></i> 💡 Kontaktai
+            </h3>
+            <p class="text-gray-700 leading-relaxed">
+                Jei turite klausimų dėl šios svetainės, norite prašyti turinio pataisymų ar aptarti bendradarbiavimą,
+                prašome apsilankyti <a href="{{ url_for('contact') }}" class="text-purple-600 hover:underline font-semibold transition">Kontakto puslapyje</a>.
+            </p>
+        </section>
+        
+    </div>
+</div>
+{% endblock %}

@@ -1,8 +1,17 @@
-.env
+# Python / Flask
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
+instance/
+.env
+
+# Static uploads (vartotojų įkelti failai)
+static/uploads/
+
+# Editor folders
 .vscode/
 .idea/
-*.mp4
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+.env

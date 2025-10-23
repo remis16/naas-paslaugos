@@ -1,74 +1,155 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Naas City Guide</title>
-  <meta name="description" content="Naas City Guide – all services in one place: restaurants, beauty, sports and more." />
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
 
-  <!-- Header -->
-  <header class="header">
-    <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
-      <h1 class="logo">🇮🇪 Naas City Guide</h1>
-      <nav class="nav">
-        <a href="{{ url_for('index') }}">Home</a>
-        <a href="{{ url_for('contact') }}">Contact</a>
-        <a href="{{ url_for('legal') }}">Legal</a>
-      </nav>
+{% block title %}Naas Miesto Gidas{% endblock %}
+
+{% block content %}
+<a href="#categories-section" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-yellow-300 text-gray-900 px-3 py-2 rounded">
+  Pereiti prie paslaugų
+</a>
+
+<div class="space-y-12 container mx-auto p-4">
+
+  <!-- Hero -->
+  <header class="relative bg-gray-700 h-96 rounded-xl overflow-hidden shadow-2xl" role="banner" aria-label="Hero">
+    <img
+      src="{{ url_for('static', filename='images/jusu_parko_nuotrauka.jpg') }}"
+      alt="Naas parko vaizdas"
+      class="absolute inset-0 w-full h-full object-cover opacity-70"
+      width="1920" height="640"
+      decoding="async" fetchpriority="high" loading="eager"
+      sizes="(min-width:1024px) 100vw, 100vw">
+    <div class="relative flex items-center justify-center h-full text-center p-6 bg-black/30">
+      <div>
+        <h1 class="text-5xl font-extrabold text-white mb-4 drop-shadow-lg">
+          Sveiki atvykę į Naas gidą 🗺️
+        </h1>
+        <p class="text-xl text-gray-200 mb-8 drop-shadow-md">
+          Raskite visas reikalingas paslaugas ir vietas vienoje vietoje.
+        </p>
+        <a href="#categories-section"
+           class="inline-flex items-center bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-bold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition duration-300">
+          <i data-lucide="search" class="w-5 h-5 mr-2" aria-hidden="true"></i>
+          Naršyti paslaugas
+        </a>
+      </div>
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <section class="hero" style="background-image: url('{{ url_for('static', filename='uploads/hero_naas.jpg') }}'); background-size: cover; background-position: center; height: 400px; position: relative;">
-    <div style="background: rgba(0,0,0,0.4); position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; text-align: center;">
-      <h2 class="hero-title">Welcome to Naas Guide</h2>
-      <p class="hero-desc">Explore all local services, restaurants, beauty, sports, and more.</p>
-      <a href="#categories" class="button" style="margin-top: 1rem;">📂 Browse Services</a>
-    </div>
-  </section>
+  <div id="categories-section" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Kairė: Kategorijų navigacija -->
+    <section class="lg:col-span-1 bg-white p-6 rounded-xl shadow-lg border border-gray-100 h-fit"
+             aria-labelledby="categories-title">
+      <div class="flex items-center justify-between gap-3 mb-4">
+        <h2 id="categories-title" class="text-2xl font-bold text-gray-800">
+          Pagrindinės kategorijos
+        </h2>
+      </div>
 
-  <!-- Main Content -->
-  <main class="main-grid container" style="margin-top: 40px;">
-    <!-- Sidebar -->
-    <aside class="sidebar" id="categories">
-      <h3 class="sidebar-title">Categories</h3>
-      <ul>
-        {% for main_category, subcategories in categories.items() %}
-        <li>
-          <strong class="category-main">{{ main_category.replace('_', ' ') | title }}</strong>
-          <ul class="subcategory-list">
-            {% for subcategory in subcategories.keys() %}
-            <li>
-              <a href="{{ url_for('services', category=main_category, subcategory=subcategory) }}">
-                {{ subcategory.replace('_', ' ') | title }}
+      <!-- Greita paieška subkategorijoms -->
+      <label for="catFilter" class="block text-sm font-medium text-gray-600 mb-1">Paieška</label>
+      <input id="catFilter" type="text" placeholder="pvz., Kavinės, Stomatologas…"
+             class="w-full mb-4 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+
+      <nav class="space-y-2" aria-label="Kategorijos" id="catNav">
+        {% if categories %}
+          {% for category, subcategories in categories|dictsort %}
+            <h3 class="text-xl font-bold mt-4 mb-1 text-gray-900 border-t pt-2 first:border-t-0 first:pt-0">
+              {{ category.replace('_', ' ').title() }}
+            </h3>
+            {% for subcategory, items in subcategories|dictsort %}
+              {% set count = (items|length) if items is iterable else 0 %}
+              <a href="{{ url_for('services', category=category, subcategory=subcategory) }}"
+                 class="cat-item block text-lg font-medium text-gray-700 hover:text-green-600 transition duration-150 pl-4"
+                 data-label="{{ (subcategory.replace('_',' ').title() ~ ' ' ~ category.replace('_',' ').title()) | lower }}">
+                 — {{ subcategory.replace('_', ' ').title() }} ({{ count }})
               </a>
-            </li>
             {% endfor %}
-          </ul>
-        </li>
-        {% endfor %}
-        <li>
-          <a href="{{ url_for('places') }}">📍 Attractions</a>
-        </li>
-      </ul>
-    </aside>
-
-    <!-- About Section -->
-    <section class="content">
-      <h2>🌟 About This Project</h2>
-      <p>Our goal is to help people discover all services in Naas easily.</p>
-      <p>The platform will grow and improve over time – for locals and visitors alike.</p>
+          {% endfor %}
+        {% else %}
+          <p class="text-gray-500">Kategorijos nerastos. Pridėkite jas per Admin panelę.</p>
+        {% endif %}
+      </nav>
+      <p id="noMatches" class="hidden text-sm text-gray-500 mt-3">Rezultatų nėra.</p>
     </section>
-  </main>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <p>&copy; {{ year }} Naas City Guide. All rights reserved.</p>
-    <p>Server: {{ server_info }}</p>
-  </footer>
+    <!-- Dešinė: Apie + Reklamos -->
+    <section class="lg:col-span-2 space-y-8">
+      <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+        <h2 class="text-2xl font-bold text-gray-800 mb-5 border-b pb-2 flex items-center">
+          <i data-lucide="sparkles" class="w-6 h-6 mr-2 text-yellow-500" aria-hidden="true"></i>
+          Apie šį projektą
+        </h2>
+        <p class="text-gray-600 leading-relaxed">
+          Mūsų tikslas – padėti visiems gyventojams ir svečiams lengvai ir greitai atrasti visas Naas mieste esančias paslaugas.
+          Nuo geriausios kavinės iki patikimo mechaniko – visa informacija čia. Platforma nuolat augs ir tobulės, kad taptų nepakeičiamu jūsų asistentu.
+        </p>
+        <p class="text-gray-600 mt-4 leading-relaxed">
+          Prisijunkite prie bendruomenės ir prisidėkite prie informacijos pildymo!
+        </p>
+      </div>
 
-</body>
-</html>
+      {% if ads %}
+      <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+        <h2 class="text-2xl font-bold text-gray-800 border-b pb-2 mb-4 flex items-center">
+          <i data-lucide="megaphone" class="w-6 h-6 mr-2 text-red-500" aria-hidden="true"></i>
+          Partnerių reklamos
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {% for ad in ads %}
+            {% set is_http = ad.link and (ad.link.startswith('http://') or ad.link.startswith('https://')) %}
+            {% if is_http %}
+            <a href="{{ ad.link }}" target="_blank" rel="noopener noreferrer nofollow sponsored" class="block"
+               aria-label="Reklama: {{ ad.title|e }}">
+            {% else %}
+            <div class="block opacity-70 cursor-not-allowed" title="Netinkama nuoroda">
+            {% endif %}
+
+              <article class="bg-gray-50 p-3 rounded-lg shadow-sm hover:shadow-md transition duration-300 border border-gray-200">
+                {% if ad.image %}
+                <img src="{{ url_for('static', filename=ad.image) }}"
+                     alt="{{ ad.title|e }}"
+                     class="w-full h-20 object-cover rounded-lg mb-2"
+                     decoding="async" loading="lazy" width="640" height="160">
+                {% endif %}
+                {% if ad.category %}
+                  <p class="text-xs font-semibold text-red-600">{{ ad.category | e }}</p>
+                {% endif %}
+                <p class="text-md font-bold text-gray-800">{{ ad.title | e }}</p>
+              </article>
+
+            {% if is_http %}
+            </a>
+            {% else %}
+            </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </section>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Paprastas subkategorijų filtras
+  const input = document.getElementById('catFilter');
+  const items = document.querySelectorAll('#catNav .cat-item');
+  const noMatches = document.getElementById('noMatches');
+
+  function filter() {
+    const q = (input.value || '').trim().toLowerCase();
+    let any = false;
+    items.forEach(el => {
+      const label = el.dataset.label || '';
+      const show = !q || label.includes(q);
+      el.classList.toggle('hidden', !show);
+      if (show) any = true;
+    });
+    noMatches.classList.toggle('hidden', any);
+  }
+  input?.addEventListener('input', filter);
+</script>
+{% endblock %}

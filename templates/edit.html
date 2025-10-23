@@ -1,73 +1,91 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Service</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 py-6 px-4 text-gray-800">
+{% extends "base.html" %}
 
-<main class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-2xl font-bold mb-6">✏️ Edit Service</h1>
+{% block title %}Redaguoti Paslaugą{% endblock %}
 
-    <form method="POST" enctype="multipart/form-data" autocomplete="off" class="space-y-4">
-        <input type="hidden" name="category" value="{{ category }}">
-        <input type="hidden" name="subcategory" value="{{ subcategory }}">
-        <input type="hidden" name="index" value="{{ index }}">
+{% block content %}
+<div class="space-y-8">
+    <h1 class="text-3xl font-extrabold text-gray-900 border-b pb-2 flex items-center">
+        <i data-lucide="pencil-line" class="w-8 h-8 mr-3 text-red-600"></i> Redaguoti Paslaugą
+    </h1>
 
-        <div>
-            <label for="service-name" class="block font-medium mb-1">Service Name:</label>
-            <input id="service-name" type="text" name="name" value="{{ service.name }}" required class="w-full border p-2 rounded">
-        </div>
+    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">
+            Redaguojama: {{ service.name }} ({{ category | title }} / {{ subcategory | title }})
+        </h2>
 
-        <div>
-            <label for="service-description" class="block font-medium mb-1">Description:</label>
-            <textarea id="service-description" name="description" required class="w-full border p-2 rounded" minlength="10" maxlength="1000">{{ service.description }}</textarea>
-        </div>
+        <form method="POST" action="{{ url_for('edit_service') }}" enctype="multipart/form-data" class="space-y-4">
+            
+            {{ csrf_token() }} 
 
-        <div>
-            <label for="service-address" class="block font-medium mb-1">Address:</label>
-            <input id="service-address" type="text" name="address" value="{{ service.address }}" required class="w-full border p-2 rounded">
-        </div>
+            <input type="hidden" name="category" value="{{ category }}">
+            <input type="hidden" name="subcategory" value="{{ subcategory }}">
+            <input type="hidden" name="index" value="{{ index }}">
 
-        <div>
-            <label for="service-phone" class="block font-medium mb-1">Phone:</label>
-            <input id="service-phone" type="tel" name="phone" value="{{ service.phone }}" pattern="\+?\d{7,15}" title="Enter a valid phone number" required class="w-full border p-2 rounded">
-        </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Pavadinimas *</label>
+                    <input type="text" name="name" id="name" required value="{{ service.name }}" 
+                           class="form-input" placeholder="Kavinė 'Svajonė'">
+                </div>
+                <div>
+                    <label for="address" class="block text-sm font-medium text-gray-700">Adresas *</label>
+                    <input type="text" name="address" id="address" required value="{{ service.address }}" 
+                           class="form-input" placeholder="Gatvė 10, Naas">
+                </div>
+            </div>
 
-        <div>
-            <label for="service-working-hours" class="block font-medium mb-1">Working Hours:</label>
-            <input id="service-working-hours" type="text" name="working_hours" value="{{ service.working_hours }}" required class="w-full border p-2 rounded">
-        </div>
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700">Aprašymas *</label>
+                <textarea name="description" id="description" rows="3" required class="form-input" 
+                          placeholder="Trumpas aprašymas apie paslaugą ar vietą...">{{ service.description }}</textarea>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label for="phone" class="block text-sm font-medium text-gray-700">Telefonas</label>
+                    <input type="tel" name="phone" id="phone" value="{{ service.phone }}" class="form-input" placeholder="+3706...">
+                </div>
+                <div>
+                    <label for="website" class="block text-sm font-medium text-gray-700">Svetainė</label>
+                    <input type="url" name="website" id="website" value="{{ service.website }}" class="form-input" placeholder="https://www.svetaine.lt">
+                </div>
+                <div>
+                    <label for="working_hours" class="block text-sm font-medium text-gray-700">Darbo Laikas</label>
+                    <input type="text" name="working_hours" id="working_hours" value="{{ service.working_hours }}" class="form-input" placeholder="9:00 - 18:00">
+                </div>
+            </div>
 
-        <div>
-            <label for="service-maps" class="block font-medium mb-1">Google Maps Link:</label>
-            <input id="service-maps" type="url" name="maps" value="{{ service.maps }}" required class="w-full border p-2 rounded">
-        </div>
+            <div>
+                <label for="maps" class="block text-sm font-medium text-gray-700">Google Maps Nuoroda *</label>
+                <input type="url" name="maps" id="maps" required value="{{ service.maps }}" class="form-input" placeholder="Nuoroda į Google Maps vietą">
+            </div>
 
-        <div>
-            <label for="service-website" class="block font-medium mb-1">Website (optional):</label>
-            <input id="service-website" type="url" name="website" value="{{ service.website }}" class="w-full border p-2 rounded">
-        </div>
+            <div class="border-t pt-4">
+                {% if service.image and service.image != 'uploads/' %}
+                    <p class="text-sm text-gray-600 mb-2">Dabartinis paveikslėlis: <img src="{{ url_for('static', filename=service.image) }}" alt="Dabartinis" class="w-16 h-16 object-cover inline-block border rounded"></p>
+                {% endif %}
+                <label for="image" class="block text-sm font-medium text-gray-700">Įkelti Naują Paveikslėlį (pakeisti dabartinį)</label>
+                <input type="file" name="image" id="image" accept="image/*" 
+                       class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100 transition">
+            </div>
 
-        <div>
-            <label for="service-image" class="block font-medium mb-1">Upload New Image (optional):</label>
-            <input id="service-image" type="file" name="image" accept="image/*" class="w-full border p-2 rounded">
-        </div>
+            <div class="flex justify-between items-center pt-4">
+                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-150 flex items-center">
+                    <i data-lucide="save" class="w-5 h-5 mr-2"></i> Išsaugoti Pakeitimus
+                </button>
+                <a href="{{ url_for('admin') }}" class="text-gray-600 hover:text-gray-900 transition flex items-center">
+                    <i data-lucide="chevron-left" class="w-5 h-5 mr-1"></i> Grįžti į Admin Panelę
+                </a>
+            </div>
 
-        <div class="flex justify-between mt-6">
-            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                💾 Save Changes
-            </button>
-            <a href="{{ url_for('admin') }}" class="text-blue-600 hover:underline self-center">⬅ Back to Admin</a>
-        </div>
-    </form>
-</main>
+        </form>
+    </div>
 
-<footer class="mt-8 text-center text-sm text-gray-500">
-  <p>&copy; {{ year }} Naas City Guide. All rights reserved.</p>
-</footer>
+</div>
 
-</body>
-</html>
+<style>
+    .form-input {
+        @apply mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 transition;
+    }
+</style>
+{% endblock %}

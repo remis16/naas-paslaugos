@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NAAS Paslaugos{% endblock %}</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- CHANGE: papildomi head įterpimai iš vaikinių šablonų -->
+    {% block head_extra %}{% endblock %}
+
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        /* CHANGE: @apply CDN režime neveikia, todėl pritaikome util klases inline (žr. <a class="nav-link ..."> pakeistas) */
+        .flash-success { background-color: #dcfce7; color: #065f46; border-left: 4px solid #4ade80; }
+        .flash-error { background-color: #fee2e2; color: #991b1b; border-left: 4px solid #f87171; }
+        .flash-info { background-color: #e0f2fe; color: #0369a1; border-left: 4px solid #60a5fa; }
+        .lucide { width: 1.25rem; height: 1.25rem; }
+    </style>
+
+    <!-- CHANGE: CSRF makro, kad būtų paprasta įdėti tokeną į kiekvieną POST formą -->
+    {% macro csrf_field() -%}
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    {%- endmacro %}
+</head>
+<body class="flex flex-col min-h-screen">
+    
+    <nav class="bg-gray-900 p-4 shadow-xl sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{{ url_for('index') }}" class="text-2xl font-extrabold text-white tracking-wide hover:text-green-400 transition">
+                <i data-lucide="map-pin" class="inline w-6 h-6 mr-1"></i> NAAS Paslaugos
+            </a>
+            
+            <div class="space-x-2 flex items-center">
+                <!-- CHANGE: vietoje .nav-link (su @apply) tiesiog util klasės -->
+                <a href="{{ url_for('places') }}" class="text-gray-300 hover:text-green-400 transition duration-200 ease-in-out px-3 py-2 rounded-md hidden sm:inline">Vietos</a>
+                <a href="{{ url_for('contact') }}" class="text-gray-300 hover:text-green-400 transition duration-200 ease-in-out px-3 py-2 rounded-md hidden sm:inline">Kontaktai</a>
+                <a href="{{ url_for('legal') }}" class="text-gray-300 hover:text-green-400 transition duration-200 ease-in-out px-3 py-2 rounded-md hidden sm:inline">Teisinė Info</a>
+                
+                {% if session.get('logged_in') %}
+                    <a href="{{ url_for('admin') }}" class="bg-purple-600 hover:bg-purple-500 text-white font-semibold py-1.5 px-4 rounded-full text-sm transition shadow-md">
+                        Admin ⚙️
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="text-gray-300 hover:text-green-400 transition duration-200 ease-in-out px-3 py-2 rounded-md text-sm">Atsijungti</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="bg-green-500 hover:bg-green-400 text-gray-900 font-bold py-1.5 px-4 rounded-full text-sm transition shadow-md">
+                        Prisijungti ➡️
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 mt-5">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="flash-{{ category }} p-4 mb-3 rounded-lg text-sm font-medium flex items-center shadow-lg border-opacity-75">
+                    <span class="mr-3 lucide">
+                        {% if category == 'success' %}<i data-lucide="check-circle"></i>
+                        {% elif category == 'error' %}<i data-lucide="alert-triangle">

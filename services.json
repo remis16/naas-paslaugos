@@ -2,17 +2,6 @@
   "food_and_drinks": {
     "restaurants": [
       {
-        "id": "restaurant-1",
-        "name": "Vie de Châteaux",
-        "description": "Authentic French cuisine with a wine selection.",
-        "address": "Sallins Rd, Naas",
-        "phone": "045 789321",
-        "working_hours": "13:00–23:00",
-        "maps": "https://maps.google.com/?q=Vie+de+Châteaux+Naas",
-        "website": "https://viede.ie",
-        "image": null
-      },
-      {
         "id": "restaurant-2",
         "name": "33 South Main",
         "description": "A modern gastrobar in the center of Naas offering a wide selection of food, wine, cocktails, and coffee. Includes several event spaces such as 'The Jungle', 'The Snugs', and 'The Conservatory'.",
@@ -21,7 +10,8 @@
         "working_hours": "12:00–00:30",
         "maps": "https://maps.google.com/?q=33+South+Main+Naas",
         "website": "https://33southmain.com",
-        "image": "naas_restoranai.jpg"
+        "image": "naas_restoranai.jpg",
+        "created_at": "2025-08-08T12:00:00"
       }
     ],
     "cafes": [],
@@ -41,7 +31,8 @@
         "working_hours": "09:00–18:00",
         "maps": "https://maps.google.com/?q=Elegance+Hair+Studio+Naas",
         "website": null,
-        "image": null
+        "image": "uploads/default.jpg",
+        "created_at": "2025-08-08T12:00:00"
       }
     ],
     "nail_salons": [],
@@ -62,7 +53,8 @@
         "working_hours": "Mon–Fri 9:00–18:00 (closed 13:00–14:00), Closed on weekends",
         "maps": "https://maps.app.goo.gl/ujctjgYk3xRDCsYF7",
         "website": "https://naasbodyrepair.ie",
-        "image": ""
+        "image": "uploads/default.jpg",
+        "created_at": "2025-08-08T12:00:00"
       }
     ],
     "petrol_stations": [],
@@ -76,7 +68,8 @@
         "working_hours": "08:00–19:00",
         "maps": "https://maps.google.com/?q=Sparkle+Car+Wash+Naas",
         "website": null,
-        "image": null
+        "image": "uploads/default.jpg",
+        "created_at": "2025-08-08T12:00:00"
       }
     ],
     "taxis": [],
@@ -94,7 +87,8 @@
         "working_hours": "06:00–22:00",
         "maps": "https://maps.google.com/?q=Naas+Fitness+Club",
         "website": "https://naasfitness.ie",
-        "image": null
+        "image": "uploads/default.jpg",
+        "created_at": "2025-08-08T12:00:00"
       }
     ],
     "swimming_pools": [],
@@ -113,7 +107,6 @@
   "accommodation": {
     "hotels": [
       {
-        "id": "hotel-1",
         "name": "Naas Court Hotel",
         "description": "Affordable hotel in the heart of Naas with bar and restaurant.",
         "address": "South Main St, Naas",
@@ -121,7 +114,7 @@
         "working_hours": "24/7",
         "maps": "https://maps.google.com/?q=Naas+Court+Hotel",
         "website": "https://naascourthotel.ie",
-        "image": null
+        "image": "uploads/default.jpg"
       }
     ],
     "bed_and_breakfast": [],
@@ -131,5 +124,8 @@
   "job_offers": {
     "looking_for_job": [],
     "offering_job": []
+  },
+  "": {
+    "": []
   }
 }

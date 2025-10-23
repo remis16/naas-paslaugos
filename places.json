@@ -1,0 +1,26 @@
+[
+  {
+    "id": "place-1",
+    "name": "Naas Town Hall",
+    "description": "Historical building in the heart of Naas, hosting events and exhibitions.",
+    "address": "Main Street, Naas, Co. Kildare",
+    "maps": "https://maps.google.com/?q=Naas+Town+Hall",
+    "image": "uploads/naas_town_hall.jpg"
+  },
+  {
+    "id": "place-2",
+    "name": "Monread Park",
+    "description": "Large public park with playgrounds, walking paths, and sports fields.",
+    "address": "Monread Avenue, Naas, Co. Kildare",
+    "maps": "https://maps.google.com/?q=Monread+Park+Naas",
+    "image": "uploads/monread_park.jpg"
+  },
+  {
+    "id": "place-3",
+    "name": "Naas Racecourse",
+    "description": "Popular venue for horse racing and events throughout the year.",
+    "address": "Tippra Road, Naas, Co. Kildare",
+    "maps": "https://maps.google.com/?q=Naas+Racecourse",
+    "image": "uploads/naas_racecourse.jpg"
+  }
+]

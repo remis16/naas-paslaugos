@@ -1,87 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Browse local services in Naas by category and subcategory.">
-    <title>{{ category.replace('_', ' ') | title }} – Naas City Guide</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block title %}{{ category.title() }} Paslaugos{% endblock %}
 
-<header>
-    <nav class="navbar">
-        <div class="logo">🇮🇪 Naas City Guide</div>
-        <ul class="nav-links">
-            <li><a href="{{ url_for('index') }}">Home</a></li>
-            <li><a href="{{ url_for('contact') }}">Contact</a></li>
-            <li><a href="{{ url_for('legal') }}">Legal</a></li>
-        </ul>
-    </nav>
-</header>
+{% block content %}
+<main class="container mx-auto p-4 space-y-8">
+    <header class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-green-500">
+        <nav class="text-sm font-medium text-gray-500 mb-2">
+            <a href="{{ url_for('index') }}" class="hover:text-gray-700">Pradžia</a>
+            <span class="mx-2">/</span>
+            <a href="{{ url_for('index') }}#categories-section" class="hover:text-gray-700">Visos Kategorijos</a> 
+            <span class="mx-2">/</span>
+            <span class="text-gray-800">{{ category.title() }}</span>
+        </nav>
+        <h1 class="text-3xl font-extrabold text-gray-800 flex items-center">
+            <i data-lucide="building-2" class="w-7 h-7 mr-3 text-green-600"></i> 
+            {{ category.title() }} Paslaugos
+        </h1>
+        <p class="text-gray-600 mt-2">Iš viso rasta **{{ services | length }}** įrašų.</p>
+    </header>
 
-<div class="hero">
-    <div class="hero-text">
-        <h1>{{ category.replace('_', ' ') | title }}</h1>
-        <p>Browse all available services below</p>
-    </div>
-</div>
-
-<main class="main-container">
-    <section class="content">
+    <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {% if services %}
-            <div class="services-container">
-                {% for service in services %}
-                    <div class="service-card">
-                        {% if service.image %}
-                            <img src="{{ url_for('static', filename=service.image) }}" class="service-image" alt="{{ service.name | e if service.name else 'Service Image' }}">
-                        {% endif %}
+            {% for service in services %}
+            <div class="bg-white rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition duration-300 border border-gray-200">
+                
+                {% if service.image %}
+                <img src="{{ url_for('static', filename=service.image) }}" 
+                     alt="{{ service.name }}" 
+                     class="w-full h-48 object-cover">
+                {% else %}
+                <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
+                    <i data-lucide="image-off" class="w-10 h-10"></i>
+                </div>
+                {% endif %}
 
-                        <h3>{{ service.name | e if service.name else 'Unnamed Service' }}</h3>
-                        <p>{{ service.description | e if service.description else 'No description provided.' }}</p>
+                <div class="p-5 space-y-3">
+                    <h2 class="text-2xl font-bold text-gray-900">{{ service.name | e }}</h2>
+                    <p class="text-gray-600 line-clamp-2">{{ service.description | e }}</p>
 
-                        <p><strong>Address:</strong> {{ service.address | e if service.address else 'No address provided.' }}</p>
-                        <p><strong>Phone:</strong> {{ service.phone | e if service.phone else 'No phone number available.' }}</p>
-                        <p><strong>Hours:</strong> {{ service.working_hours | e if service.working_hours else 'Not specified' }}</p>
-
-                        <p>
-                            {% if service.maps %}
-                                <a href="{{ service.maps | e }}" target="_blank" rel="noopener noreferrer" class="map-link">📍 View on Map</a>
-                            {% else %}
-                                <span>📍 Map not available</span>
-                            {% endif %}
-                        </p>
-
-                        <p>
-                            {% if service.website %}
-                                <a href="{{ service.website | e }}" target="_blank" rel="noopener noreferrer" class="website-link">🌐 Visit Website</a>
-                            {% else %}
-                                <span>🌐 No website available</span>
-                            {% endif %}
-                        </p>
+                    <div class="space-y-2 pt-2 border-t mt-3">
+                        <div class="flex items-start text-sm text-gray-700">
+                            <i data-lucide="map-pin" class="w-4 h-4 mr-2 flex-shrink-0 mt-1 text-red-500"></i>
+                            <span class="font-medium">{{ service.address | e }}</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-700">
+                            <i data-lucide="clock" class="w-4 h-4 mr-2 flex-shrink-0 text-blue-500"></i>
+                            <span>{{ service.working_hours | e }}</span>
+                        </div>
                     </div>
-                {% endfor %}
+                </div>
+
+                <div class="p-5 pt-0 flex justify-between space-x-3 border-t">
+                    {% if service.maps %}
+                    <a href="{{ service.maps }}" target="_blank" class="flex-1 inline-flex justify-center items-center py-2 px-3 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition duration-150">
+                        <i data-lucide="map" class="w-4 h-4 mr-2"></i> Žemėlapis
+                    </a>
+                    {% endif %}
+                    {% if service.website %}
+                    <a href="{{ service.website }}" target="_blank" class="flex-1 inline-flex justify-center items-center py-2 px-3 text-sm font-medium text-gray-900 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-150">
+                        <i data-lucide="globe" class="w-4 h-4 mr-2"></i> Svetainė
+                    </a>
+                    {% endif %}
+                </div>
             </div>
-            <div class="back-home" style="margin-top: 32px;">
-                <a href="{{ url_for('index') }}" class="back-link">⬅️ Back to Home</a>
-                <a href="{{ url_for('index') }}#categories" class="back-link" style="margin-left:16px;">📂 Back to Categories</a>
-            </div>
+            {% endfor %}
         {% else %}
-            <div class="no-services-box">
-                <h2>No services found</h2>
-                <p>There are no services listed in this category at the moment.</p>
-                <a href="{{ url_for('index') }}" class="hero-button">⬅️ Back to Home</a>
-            </div>
+        <div class="lg:col-span-3 text-center py-10 bg-gray-50 rounded-xl shadow-inner border border-dashed border-gray-300">
+            <i data-lucide="alert-triangle" class="w-10 h-10 mx-auto text-yellow-500 mb-3"></i>
+            <p class="text-xl font-semibold text-gray-700">Šioje kategorijoje paslaugų dar nėra.</p>
+            <p class="text-gray-500">Prisijunkite prie administratoriaus pulto, kad pridėtumėte pirmąjį įrašą.</p>
+            <a href="{{ url_for('login') }}" class="mt-4 inline-block text-sm text-green-600 hover:text-green-800 font-medium">
+                Prisijungti dabar →
+            </a>
+        </div>
         {% endif %}
     </section>
+
 </main>
-
-<footer class="footer">
-    <div class="footer-inner">
-        <p>&copy; {{ year }} Naas City Guide. All rights reserved.</p>
-    </div>
-</footer>
-
-</body>
-</html>
+{% endblock %}

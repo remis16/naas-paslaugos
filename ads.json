@@ -1,0 +1,15 @@
+[
+  {
+    "title": "Naas Coffee House ☕",
+    "category": "Food & Drink",
+    "link": "https://example.com/naascoffee",
+    "image": "uploads/coffee.jpg"
+  },
+  {
+    "title": "Beauty Salon Naas 💅",
+    "category": "Beauty & Wellness",
+    "link": "https://example.com/beauty",
+    "image": "uploads/beauty.jpg"
+  }
+]
+

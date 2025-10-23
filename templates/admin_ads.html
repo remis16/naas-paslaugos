@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Reklamos Valdymas{% endblock %}
+
+{% block content %}
+<div class="space-y-10">
+
+    <h1 class="text-3xl font-extrabold text-gray-900 border-b pb-2 flex items-center">
+        <i data-lucide="megaphone" class="w-8 h-8 mr-3 text-red-600"></i> Reklamos Valdymas
+    </h1>
+    
+    <a href="{{ url_for('admin') }}" class="inline-flex items-center text-gray-600 hover:text-gray-900 transition">
+        <i data-lucide="chevron-left" class="w-5 h-5 mr-1"></i> Grįžti į Admin Panelę
+    </a>
+
+    <div class="bg-white p-6 rounded-xl shadow-2xl border border-gray-100">
+        <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+             <i data-lucide="plus-circle" class="w-5 h-5 mr-2 text-green-600"></i> Pridėti Naują Reklamą
+        </h2>
+        
+        <form method="POST" action="{{ url_for('manage_ads') }}" enctype="multipart/form-data" class="space-y-4">
+            
+            {{ csrf_token() }} <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="title" class="block text-sm font-medium text-gray-700">Pavadinimas *</label>
+                    <input type="text" name="title" id="title" required class="form-input" placeholder="Reklamos pavadinimas">
+                </div>
+                <div>
+                    <label for="category" class="block text-sm font-medium text-gray-700">Kategorija (Pasirenkama)</label>
+                    <input type="text" name="category" id="category" class="form-input" placeholder="Food & Drink, Beauty...">
+                </div>
+            </div>
+
+            <div>
+                <label for="link" class="block text-sm font-medium text-gray-700">Svetainės Nuoroda *</label>
+                <input type="url" name="link" id="link" required class="form-input" placeholder="https://example.com">
+            </div>
+
+            <div>
+                <label for="image" class="block text-sm font-medium text-gray-700">Paveikslėlis</label>
+                <input type="file" name="image" id="image" accept="image/*" class="form-file-input">
+            </div>
+            
+            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-150 flex items-center justify-center">
+                <i data-lucide="upload" class="w-5 h-5 mr-2"></i> Įkelti Reklamą
+            </button>
+        </form>
+    </div>
+
+    <h2 class="text-2xl font-bold text-gray-800 border-b pb-2 mt-8 flex items-center">
+        <i data-lucide="clipboard-list" class="w-6 h-6 mr-2 text-blue-600"></i> Esamos Reklamos
+    </h2>
+
+    {% if ads %}
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for ad in ads %}
+                <div class="border rounded-xl shadow-lg overflow-hidden bg-white hover:shadow-xl transition duration-300">
+                    
+                    {% if ad.image %}
+                        <img src="{{ url_for('static', filename=ad.image) }}" alt="{{ ad.title }}" class="w-full h-32 object-cover">
+                    {% endif %}
+                    
+                    <div class="p-4 space-y-2">
+                        <h3 class="text-lg font-semibold text-gray-900">{{ ad.title }}</h3>
+                        <p class="text-gray-500 text-sm italic">{{ ad.category or 'Nenurodyta' }}</p>
+                        
+                        <a href="{{ ad.link }}" target="_blank" class="inline-flex items-center text-red-600 hover:text-red-800 transition text-sm font-medium">
+                            <i data-lucide="external-link" class="w-4 h-4 mr-1"></i> Aplankyti Svetainę
+                        </a>
+                        
+                        <form method="POST" action="{{ url_for('delete_ad', ad_id=ad.id) }}" class="pt-3 border-t mt-3" onsubmit="return confirm('Ar tikrai norite ištrinti šią reklamą?')">
+                            {{ csrf_token() }} <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm transition duration-150 flex items-center">
+                                <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i> Ištrinti
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="bg-yellow-100 p-4 rounded-lg border-l-4 border-yellow-500 text-yellow-700">
+            <p>Šiuo metu aktyvių reklamų nėra.</p>
+        </div>
+    {% endif %}
+
+</div>
+
+<style>
+    .form-input {
+        @apply mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500 transition;
+    }
+    .form-file-input {
+        @apply mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 transition;
+    }
+</style>
+{% endblock %}

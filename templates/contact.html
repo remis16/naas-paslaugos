@@ -1,50 +1,77 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact – Naas City Guide</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <header class="header">
-        <div class="container">
-            <h1 class="logo">🇮🇪 Naas City Guide</h1>
-            <nav class="nav">
-                <a href="{{ url_for('index') }}">Home</a>
-                <a href="{{ url_for('legal') }}">Legal</a>
-            </nav>
+{% extends "base.html" %}
+
+{% block title %}Susisiekite su Mumis{% endblock %}
+
+{% block content %}
+<div class="flex justify-center py-8">
+    <div class="w-full max-w-4xl space-y-10">
+
+        <h1 class="text-3xl font-extrabold text-gray-900 border-b pb-2 flex items-center">
+            <i data-lucide="mail" class="w-8 h-8 mr-3 text-red-600"></i> Susisiekite su Mumis
+        </h1>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-2xl border border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Siųskite Mums Žinutę</h2>
+                
+                {% if message_sent %}
+                    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg mb-6">
+                        <p class="font-bold">Ačiū!</p>
+                        <p>Jūsų žinutė buvo sėkmingai išsiųsta. Atsakysime Jums kaip įmanoma greičiau.</p>
+                    </div>
+                {% else %}
+                    <form method="POST" action="{{ url_for('contact') }}" class="space-y-4">
+                        
+                        {{ csrf_token() }} <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700">Vardas *</label>
+                            <input type="text" name="name" id="name" required class="form-input" placeholder="Jūsų vardas">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">El. Paštas *</label>
+                            <input type="email" name="email" id="email" required class="form-input" placeholder="vardas@pastas.lt">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700">Žinutė *</label>
+                            <textarea name="message" id="message" rows="5" required class="form-input" placeholder="Parašykite savo klausimą ar pasiūlymą..."></textarea>
+                        </div>
+                        
+                        <button type="submit" 
+                                class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-150 flex items-center justify-center">
+                            <i data-lucide="send" class="w-5 h-5 mr-2"></i> Siųsti
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+
+            <div class="lg:col-span-1 space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                    <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <i data-lucide="info" class="w-5 h-5 mr-2 text-blue-500"></i> Bendra Informacija
+                    </h3>
+                    <p class="text-gray-600 space-y-2">
+                        <span class="block"><strong>Adresas:</strong> Naas Miesto Savivaldybė</span>
+                        <span class="block"><strong>El. Paštas:</strong> info@naaspaslaugos.lt</span>
+                        <span class="block"><strong>Telefonas:</strong> +353 45 XXX XXX</span>
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                    <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center">
+                        <i data-lucide="help-circle" class="w-5 h-5 mr-2 text-yellow-500"></i> Pagalba
+                    </h3>
+                    <p class="text-gray-600">
+                        Jei turite klausimų dėl reklamos ar duomenų atnaujinimo, susisiekite su mumis el. paštu.
+                    </p>
+                </div>
+            </div>
         </div>
-    </header>
 
-    <main class="container" style="margin-top: 40px; margin-bottom: 40px;">
-        <section class="content contact-section">
-            <h2>📧 Contact Us</h2>
-            {% if message_sent %}
-                <div class="popup popup-success" style="position: static; transform: none; margin-bottom: 1rem;">
-                    Thank you for your message! We will get back to you soon.
-                </div>
-            {% endif %}
-            <form method="POST" class="admin-form" autocomplete="off">
-                <div class="form-group">
-                    <label for="name" class="form-label">Your Name:</label>
-                    <input type="text" id="name" name="name" class="form-input" required minlength="2" maxlength="50">
-                </div>
-                <div class="form-group">
-                    <label for="email" class="form-label">Your Email:</label>
-                    <input type="email" id="email" name="email" class="form-input" required maxlength="100">
-                </div>
-                <div class="form-group">
-                    <label for="message" class="form-label">Message:</label>
-                    <textarea id="message" name="message" class="form-input" required minlength="10" maxlength="1000" rows="5"></textarea>
-                </div>
-                <button type="submit" class="button">Send Message</button>
-            </form>
-        </section>
-    </main>
+    </div>
+</div>
 
-    <footer class="footer">
-        <p>&copy; {{ year }} Naas City Guide. All rights reserved.</p>
-    </footer>
-</body>
-</html>
+<style>
+    .form-input {
+        @apply mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 transition;
+    }
+</style>
+{% endblock %}
